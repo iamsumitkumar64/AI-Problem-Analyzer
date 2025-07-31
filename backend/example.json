@@ -1,0 +1,118 @@
+[
+    {
+        "name": "राम(Ram)",
+        "mobileNo": 9891017160,
+        "wardNo": 1010,
+        "numberOfProblems": 3,
+        "problems": [
+            {
+                "tags": [
+                    "drinking water"
+                ],
+                "english": "Availability of clean and hygienic drinking water in the village is not there.",
+                "hindi": "गाव मे स्वच्छ और सुनहीत पीने के पानी की उपलब्धता नही है"
+            },
+            {
+                "tags": [
+                    "water resources"
+                ],
+                "english": "Traditional water sources like borewells, ponds and wells have dried up.",
+                "hindi": "बोरवेल, तालाब और कुएँ जैसे पारंपरिक जल स्त्रोत सूख गए है।"
+            },
+            {
+                "tags": [
+                    "water contamination",
+                    "health"
+                ],
+                "english": "The water available in the village is contaminated and not potable, causing diseases.",
+                "hindi": "गाव मे जो पानी आता है वह गंदा होता है और पिने योग्य नही जिससे बिमारियों का"
+            }
+        ]
+    },
+    [
+        {
+            "name": "नरेन्द्र कुमार (Narendra Kumar)",
+            "mobileNo": 23145,
+            "wardNo": 103,
+            "numberOfProblems": 4,
+            "problems": [
+                {
+                    "tags": [
+                        "Farming",
+                        "Agriculture",
+                        "Irrigation",
+                        "Seeds",
+                        "Fertilizer"
+                    ],
+                    "english": "Farmers are not getting timely supply of seeds, fertilizers, and irrigation.",
+                    "hindi": "किसानों को समय पर खाद, बीज और सिंचाई की सुविधा नहीं मिल पा रही है जिससे फसल का उत्पादन प्रभावित हो रहा है।"
+                },
+                {
+                    "tags": [
+                        "Digital India",
+                        "Mobile Network",
+                        "Connectivity"
+                    ],
+                    "english": "Despite Digital India initiative, many villages still lack adequate mobile network connectivity.",
+                    "hindi": "डिजिटल इंडिया के दौर में भी कई गाँवों में मोबाइल सिग्नल की समस्या है।"
+                },
+                {
+                    "tags": [
+                        "Employment",
+                        "Migration",
+                        "Rural Exodus"
+                    ],
+                    "english": "Lack of employment opportunities in villages is forcing people to migrate to cities.",
+                    "hindi": "गाँवों में रोजगार के अवसरों की कमी के कारण लोग शहरों की ओर पलायन कर रहे हैं।"
+                },
+                {
+                    "tags": [
+                        "Others"
+                    ],
+                    "english": "Unable to identify the problem.",
+                    "hindi": "कुछ भी स्थित दिशा देखने में identify कर पाना मुश्किल है।"
+                }
+            ]
+        }
+    ],
+    {
+        "name": "Sunita Sharma (सुनीता शर्मा)",
+        "mobileNo": 9062193658,
+        "wardNo": 34,
+        "numberOfProblems": 4,
+        "problems": [
+            {
+                "tags": [
+                    "Traffic",
+                    "Transportation"
+                ],
+                "english": "Traffic congestion due to increasing number of vehicles.",
+                "hindi": "वाहनों की बढ़ती संख्या के कारण यातायात की भीड़।"
+            },
+            {
+                "tags": [
+                    "Pollution",
+                    "Environment"
+                ],
+                "english": "Air pollution caused by industries and vehicle emissions.",
+                "hindi": "उद्योगों और वाहनों के उत्सर्जन से होने वाला वायु प्रदूषण।"
+            },
+            {
+                "tags": [
+                    "Waste Management",
+                    "Sanitation"
+                ],
+                "english": "Lack of proper waste management systems.",
+                "hindi": "उचित अपशिष्ट प्रबंधन प्रणालियों का अभाव।"
+            },
+            {
+                "tags": [
+                    "Housing",
+                    "Overcrowding"
+                ],
+                "english": "Overcrowding and shortage of affordable housing.",
+                "hindi": "अत्यधिक भीड़भाड़ और किफायती आवासों की कमी।"
+            }
+        ]
+    }
+]
