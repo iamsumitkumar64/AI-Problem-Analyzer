@@ -39,7 +39,6 @@ const ChartANalyse: React.FC<CommonProblemProps> = ({ datas }) => {
     if (!datas || datas.length === 0) {
         return <p>No data available</p>;
     }
-
     const chartData = {
         labels: datas.map((item) => item.name),
         datasets: [
@@ -48,17 +47,17 @@ const ChartANalyse: React.FC<CommonProblemProps> = ({ datas }) => {
                 data: datas.map((item) => item.numberOfProblems),
                 backgroundColor: ['#EF4444', '#3B82F6', '#F59E0B', '#10B981', '#8B5CF6', '#EC4899'],
                 borderColor: ['#B91C1C', '#1D4ED8', '#B45309', '#047857', '#6D28D9', '#BE185D'],
-                borderWidth: 1.5,
-                hoverOffset: 10
-            },
-            {
-                label: 'Complaints',
-                data: datas.map((item) => item.problems.length),
-                backgroundColor: ['#F97316', '#22D3EE', '#A3E635', '#FB7185', '#6366F1', '#14B8A6'],
-                borderColor: ['#C2410C', '#0E7490', '#4D7C0F', '#BE123C', '#4338CA', '#0F766E'],
                 borderWidth: 0.5,
-                hoverOffset: 10
-            }
+                hoverOffset: 10,
+            },
+            // {
+            //     label: 'Complaints',
+            //     data: datas.map((item) => item.problems.length),
+            //     backgroundColor: ['#F97316', '#22D3EE', '#A3E635', '#FB7185', '#6366F1', '#14B8A6'],
+            //     borderColor: ['#C2410C', '#0E7490', '#4D7C0F', '#BE123C', '#4338CA', '#0F766E'],
+            //     borderWidth: 0.5,
+            //     hoverOffset: 10
+            // }
         ],
     };
 
@@ -82,7 +81,7 @@ const ChartANalyse: React.FC<CommonProblemProps> = ({ datas }) => {
             },
         },
         onClick: (event: ChartEvent, elements: any) => {
-            console.log(event)
+            console.log(event);
             const index = elements[0].index;
             const clickedData = datas[index];
             setPieData(clickedData);

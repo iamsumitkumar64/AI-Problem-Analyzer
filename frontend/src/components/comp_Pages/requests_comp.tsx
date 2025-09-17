@@ -7,6 +7,8 @@ import axios from 'axios';
 import backend_url from '../../Libs/env.tsx';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Dropdown, Menu } from 'antd';
+import { DownCircleOutlined } from '@ant-design/icons';
 
 const RequestsPage_comp = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,6 +20,26 @@ const RequestsPage_comp = () => {
     const [iframeFile, setIframeFile] = useState<String>('');
     const navigate = useNavigate();
 
+    const actionMenu = (item: any) => (
+        <Menu className='text-center'>
+            <Menu.Item key="delete" onClick={() => handleDelete(item.id)} className='hover:!bg-red-500 hover:font-bold'>
+                ❌ Delete
+            </Menu.Item>
+            <Menu.Item key="preview" onClick={() => handlepreview(item.id)} className='hover:!bg-blue-500'>
+                👁️ Preview
+            </Menu.Item>
+            {!item.documents ? (
+                <Menu.Item key="report" onClick={() => handlereport(item.id)} className='hover:!bg-yellow-500'>
+                    ✨ Generate Report
+                </Menu.Item>
+            ) : (
+                <Menu.Item key="analyse" onClick={() => handleAnalyse(item.id)} className='hover:!bg-yellow-500'>
+                    ✨ Analyse Report
+                </Menu.Item>
+            )}
+        </Menu>
+    );
+
     const fetch = async () => {
         setIsLoading(true);
         try {
@@ -28,15 +50,20 @@ const RequestsPage_comp = () => {
                     <Link to={`/main/report/${item.id}`} className='text-blue-500 text-1xl font-bold'>{item.documents}</Link>
                 ),
                 action: (
-                    <div>
-                        <Button type='primary' className='mx-2 my-2' ghost onClick={() => handleDelete(item.id)}>&#x274C;</Button>
-                        <Button type='primary' className='mx-2 my-2' ghost onClick={() => handlepreview(item.id)}>&#128064;</Button>
-                        {!item.documents ?
-                            <Button type='primary' className='mx-2 my-2' ghost onClick={() => handlereport(item.id)}>&#10024;</Button>
-                            :
-                            <Button type='primary' className='mx-2 my-2' ghost onClick={() => handleAnalyse(item.id)}>&#10024;</Button>
-                        }
-                    </div>
+                    // <div>
+                    //     <Button type='primary' className='mx-2 my-2' ghost onClick={() => handleDelete(item.id)}>&#x274C;</Button>
+                    //     <Button type='primary' className='mx-2 my-2' ghost onClick={() => handlepreview(item.id)}>&#128064;</Button>
+                    //     {!item.documents ?
+                    //         <Button type='primary' className='mx-2 my-2' ghost onClick={() => handlereport(item.id)}>&#10024;</Button>
+                    //         :
+                    //         <Button type='primary' className='mx-2 my-2' ghost onClick={() => handleAnalyse(item.id)}>&#10024;</Button>
+                    //     }
+                    // </div>
+                    <Dropdown overlay={actionMenu(item)} trigger={['click']}>
+                        <Button>
+                            Actions <DownCircleOutlined />
+                        </Button>
+                    </Dropdown>
                 ),
             }));
             setIsdata(requests);
