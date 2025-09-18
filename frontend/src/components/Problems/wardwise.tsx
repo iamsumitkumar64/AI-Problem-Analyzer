@@ -31,16 +31,19 @@ const WardWiseProblem: React.FC<CommonProblemProps> = ({ data }) => {
                     <div
                         key={item._id}
                         className="bg-gray-200 shadow-md rounded-xl p-6 mb-6 border border-gray-200 hover:shadow-lg transition-all"
-                        onClick={() => setSelectedWardNO(parseInt(item.wardNo))}
+                       onClick={() => {
+    setSelectedWardNO(null); 
+    setTimeout(() => setSelectedWardNO(parseInt(item.wardNo)), 0);
+}}
                     >
-                        <h2 className="text-2xl font-semibold text-indigo-700 mb-4">
+                        <h2 className="text-2xl font-semibold text-indigo-700 mb-4 cursor-pointer">
                             🏷️ Ward No: {item.wardNo}
                         </h2>
                         <ul className="space-y-4">
                             {item.problems.map((problem) => (
                                 <li
                                     key={problem._id}
-                                    className="p-4 border bg-white border-gray-600 rounded-lg cursor-pointer"
+                                    className="p-4 border bg-white border-gray-600 rounded-lg"
                                 >
                                     {problem.english && (
                                         <p className="text-gray-800">

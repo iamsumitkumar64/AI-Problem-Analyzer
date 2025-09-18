@@ -3,8 +3,8 @@ import multer_config from '../config/multer.js';
 import { delfile } from '../config/delete_file.js';
 import { __dirname } from '../index.js';
 import mongoose from 'mongoose';
-import { pdfConvertFunc } from '../config/generation.js';
 import reportDB from '../models/Report.js';
+import {reportGenerationQueue} from '../config/bullmq.js';
 
 const file_type = ['application/pdf', '.pdf'];
 
@@ -67,47 +67,22 @@ export const generateReport = async (req, res) => {
         return res.status(200).json({ 'message': 'Report Request', reports: isExists.reportData });
     }
     try {
-        await requestDB.findOneAndUpdate(
-            { id: req_id },
-            { status: 'Pending' }
+       await reportGenerationQueue.add(
+            'reportGenerationQueue',
+            {req_id,isExists, username: req.session.user.username }   , {
+    attempts: 5, 
+    backoff: { type: 'exponential', delay: 10000 },
+    removeOnComplete: true,
+    removeOnFail: false
+  }
         );
-        const ans = await requestDB.findOne({ id: req_id }, { file_name: 1, _id: 0 });
-        const file_address = `/uploads/${ans.file_name}`;
-        let reports = await pdfConvertFunc(file_address, 'image', req.session.user.username + `${ans.file_name}`);
-        reports = reports.map(r => {
-            let cleaned = r.raw.trim()
-                .replace(/^```json\n?/i, '')
-                .replace(/^```/, '')
-                .replace(/```$/, '')
-                .trim();
-            // Only attempt parsing if it starts like JSON
-            if (cleaned.startsWith('{') || cleaned.startsWith('[')) {
-                return JSON.parse(cleaned);
-            } else {
-                console.warn('Skipped non-JSON content:', cleaned.slice(0, 100)); // Show a sample
-                return null;
-            }
-        }).filter(r => r !== null); // remove any entries that failed parsing
-
-        const wrappedReport = {
-            requestId: new mongoose.Types.ObjectId(req_id),
-            reportData: reports.flat() // .flat() in case of nested arrays
-        };
-        let report = await reportDB.findOneAndUpdate(
-            { requestId: req_id },
-            wrappedReport,
-            { new: true, upsert: true }
-        );
-        await requestDB.findOneAndUpdate(
-            { id: req_id },
-            { documents: report.reportData.length, status: 'Complete' }
-        );
-        return res.status(200).json({ 'message': 'Report Request', reports });
+        return res.status(200).json({ 'message': 'Report Request - Processing Started' });
     } catch (err) {
         await requestDB.findOneAndUpdate(
             { id: req_id },
             { status: 'Failed' }
         );
+        console.log(err);
         return res.status(503).json({ 'message': 'AI Service Unavilable Today'});
     }
 }

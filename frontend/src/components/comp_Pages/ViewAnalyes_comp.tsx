@@ -26,7 +26,7 @@ interface DataInterface {
 const ViewAnalyes_comp = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isData, setIsData] = useState<DataInterface[] | null>(null);
-    const [selectedButton, setSelectedButton] = useState<string>('analyses');
+    const [selectedButton, setSelectedButton] = useState<string>('ward');
 
     const fetch = async () => {
         setIsLoading(true);

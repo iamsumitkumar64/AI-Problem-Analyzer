@@ -1,4 +1,5 @@
 import path from 'path';
+import http from 'http';
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { connectDB } from './DbConnect.js';
@@ -11,14 +12,19 @@ import cors from 'cors';
 import session from 'express-session';
 import dotenv from 'dotenv';
 import MongoStore from 'connect-mongo';
+import {initializeSocket} from './config/socket.js';
 
 const app = express();
+const server = http.createServer(app);
+
 dotenv.config({ debug: true });
 const PORT = process.env.PORT;
 const frontend_url = process.env.FRONTEND_URL;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 connectDB();
+
+initializeSocket(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,7 +49,7 @@ app.use('/user', isSessionAuth, userRouter);
 app.use('/report', isSessionAuth, reportRouter);
 app.use('/request', isSessionAuth, requestRouter);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Connected to Server => http://localhost:${PORT}`);
 });
 

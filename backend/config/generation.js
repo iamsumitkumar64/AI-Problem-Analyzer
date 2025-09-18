@@ -6,6 +6,7 @@ import { __dirname } from "../index.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { delfile } from "./delete_file.js";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
+import {getIo} from './socket.js';
 
 const execPromise = util.promisify(exec);
 
@@ -37,8 +38,10 @@ export const pdfConvertFunc = async (pdf_path, img_folder, image_name) => {
             reports.push(report);
         }
         // delfile(img_folder);
+        getIo().emit('report','success');
         return reports;
     } catch (error) {
+        getIo().emit('report','Failed');
         console.error("pdfConvertFunc Function error:", error);
         throw error;
     }

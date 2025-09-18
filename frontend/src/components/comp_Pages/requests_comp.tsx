@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown, Menu } from 'antd';
 import { DownCircleOutlined } from '@ant-design/icons';
+import {socket} from '../../config/socket.js';
 
 const RequestsPage_comp = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -76,9 +77,17 @@ const RequestsPage_comp = () => {
             }, 300)
         }
     };
-    useEffect(() => {
-        fetch();
-    }, []);
+
+useEffect(() => {
+  fetch(); 
+  const handleReportSocket = (msg: string, report: any) => {
+  fetch(); 
+  };
+  socket.on('report', handleReportSocket);
+  return () => {
+    socket.off('report', handleReportSocket);
+  };
+}, []);
 
     const coldata = [
         { title: "Title", dataIndex: "title", key: "title" },
@@ -105,7 +114,7 @@ const RequestsPage_comp = () => {
             const ans = await axios.get(`${backend_url}/request/report/${id}`, { withCredentials: true });
             if (ans.status === 200) {
                 await fetch();
-                messageApi.success('Report generated successfully');
+                messageApi.success('Report Sent');
             } else {
                 messageApi.error('Failed to generate report');
             }
