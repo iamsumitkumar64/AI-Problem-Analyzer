@@ -162,7 +162,3 @@ Feel free to fork this repo, make changes, and open a PR.
 GitHub: [@iamsumitkumar64](https://github.com/iamsumitkumar64)
 
 ---
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
