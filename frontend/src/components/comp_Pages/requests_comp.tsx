@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Dropdown, Menu } from 'antd';
 import { DownCircleOutlined } from '@ant-design/icons';
-import {socket} from '../../config/socket.js';
+import {socket} from '../../config/socket';
 
 const RequestsPage_comp = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -80,7 +80,7 @@ const RequestsPage_comp = () => {
 
 useEffect(() => {
   fetch(); 
-  const handleReportSocket = (msg: string, report: any) => {
+  const handleReportSocket = () => {
   fetch(); 
   };
   socket.on('report', handleReportSocket);

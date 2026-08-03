@@ -14,21 +14,29 @@ import dotenv from 'dotenv';
 import MongoStore from 'connect-mongo';
 import {initializeSocket} from './config/socket.js';
 
+import fs from 'fs';
+
 const app = express();
 const server = http.createServer(app);
 
-dotenv.config({ debug: true });
-const PORT = process.env.PORT;
-const frontend_url = process.env.FRONTEND_URL;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: [path.join(__dirname, '.env'), path.join(__dirname, '../.env')] });
+
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const PORT = process.env.PORT || 8080;
+const frontend_url = process.env.FRONTEND_URL;
 connectDB();
 
 initializeSocket(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/upload", express.static(path.join(__dirname, "./uploads")));
+app.use("/upload", express.static(uploadsDir));
 app.use(cors({
   origin: frontend_url,
   method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],

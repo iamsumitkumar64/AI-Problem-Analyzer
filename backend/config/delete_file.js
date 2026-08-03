@@ -4,15 +4,11 @@ import { __dirname } from '../index.js';
 
 export const delfile = async (file) => {
     try {
-        if (path.resolve(__dirname, 'uploads', file)) {
-            console.log('Deleted =>', file)
-            await fs.unlink(path.resolve(__dirname, 'uploads', file));
-            // await fs.rmdir(path.resolve(__dirname, 'uploads', file));
-        } else {
-            console.log('File Not Found for Deletion =>', file);
-        }
+        const filePath = path.isAbsolute(file) ? file : path.resolve(__dirname, 'uploads', file);
+        await fs.unlink(filePath);
+        console.log('Deleted =>', file);
     }
     catch (error) {
-        console.log(`Error in Deletion (MayBe Not Found in Storage)=>${file}\t\t\t${error}`);
+        console.log(`Error in Deletion (MayBe Not Found in Storage)=>${file}\t\t\t${error.message}`);
     }
 }

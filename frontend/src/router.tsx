@@ -3,6 +3,7 @@ import MainPage from './pages/mainPage';
 import UsersPage from './pages/users';
 import RequestsPage from './pages/requests';
 import Login from './pages/login';
+import Register from './pages/register';
 import LogOut from "./services/logout";
 import CheckLogin from "./services/check_Login";
 import ReportPage from "./pages/AllReport";
@@ -15,6 +16,7 @@ const AllRoutes = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/logout" element={<LogOut />} />
 
                 <Route path="/main" element={<CheckLogin><MainPage /></CheckLogin>}>

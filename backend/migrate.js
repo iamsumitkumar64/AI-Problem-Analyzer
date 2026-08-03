@@ -2,7 +2,7 @@ import userDB from './models/user.js';
 import { connectDB } from './DbConnect.js';
 
 connectDB();
-const newUser = async (username, email, password = "123") => {
+const newUser = async (username, email, password = "123456") => {
     try {
         await userDB.create({ username, email, password });
         console.log("User created");

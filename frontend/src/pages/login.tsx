@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import backend_url from '../Libs/env';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Input, Button, Form, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -19,7 +19,7 @@ const LoginSignup: React.FC = () => {
             }
         } catch (err: any) {
             console.log(err);
-            messageApi.error(err.response.data.message);
+            messageApi.error(err.response?.data?.message || 'Login failed');
         }
     };
 
@@ -75,6 +75,13 @@ const LoginSignup: React.FC = () => {
                                 Login
                             </Button>
                         </Form.Item>
+
+                        <div className="text-center text-gray-400 text-sm mt-4">
+                            Don't have an account?{' '}
+                            <Link to="/register" className="text-blue-400 hover:underline">
+                                Register here
+                            </Link>
+                        </div>
                     </Form>
                 </div>
             </div>
