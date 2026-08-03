@@ -23,11 +23,12 @@ const CustomTable = <T extends object>({
 }: CustomTableProps<T>) => {
     const processedData = useMemo(() => {
         return data.map((ele, index) => ({
-            key: (ele as any)?.id ?? index,//Prefer id,fallback to index
+            key: (ele as any)?.id ?? index,
             rowIndex: index + 1,
             ...ele,
         }));
     }, [data]);
+
     const finalColumns: ColumnsType<T> = useMemo(() => {
         if (serialNumberConfig.show) {
             const newColumns = [...(columns ?? [])];
@@ -36,27 +37,30 @@ const CustomTable = <T extends object>({
                 key: "rowIndex",
                 align: "center",
                 title: serialNumberConfig.name,
-                width: 60,
+                width: 70,
                 fixed: "left",
             });
             return newColumns;
         }
         return columns ?? [];
     }, [columns, serialNumberConfig]);
+
     return (
-        <Table
-            columns={finalColumns}
-            dataSource={processedData}
-            loading={loading}
-            pagination={{
-                pageSize: 10,
-                onChange: onPageChange,
-            }}
-            rowKey={(record) => (record as any)?.id ?? (record as any)?.rowIndex}
-            className="shadow-md rounded-lg"
-            // scroll={{ x: '100vw', y: "calc(100vh - 240px)" }}
-            tableLayout="fixed"
-        />
+        <div className="w-full bg-[#131B2E] border border-[#3B82F6]/20 rounded-xl overflow-hidden shadow-xl">
+            <Table
+                columns={finalColumns}
+                dataSource={processedData}
+                loading={loading}
+                pagination={{
+                    pageSize: 10,
+                    onChange: onPageChange,
+                    size: "small",
+                }}
+                rowKey={(record) => (record as any)?.id ?? (record as any)?.rowIndex}
+                scroll={{ x: 'max-content' }}
+                size="middle"
+            />
+        </div>
     );
 };
 

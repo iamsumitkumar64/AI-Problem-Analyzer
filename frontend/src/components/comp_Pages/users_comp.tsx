@@ -3,7 +3,8 @@ import backend_url from '../../Libs/env.tsx';
 import { useState, useEffect } from 'react';
 import CustomTable from '../customtable/index.tsx';
 import MainAreaLayout from '../main_area_layout/index.tsx';
-import { Button, Drawer, Form, Input, message } from 'antd';
+import { Button, Drawer, Form, Input, message, Tooltip } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const UsersPage_comp = () => {
     const [form] = Form.useForm();
@@ -27,9 +28,23 @@ const UsersPage_comp = () => {
             const users = response.data.users.map((item: any) => ({
                 ...item,
                 action: (
-                    <div>
-                        <Button type='primary' className='mx-2 my-2' onClick={() => handleEdit(item)}>Edit</Button>
-                        <Button type='primary' className='mx-2 my-2' danger onClick={() => handleDelete(item.id)}>Delete</Button>
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                        <Button 
+                            type="text" 
+                            icon={<EditOutlined className="text-[#3B82F6]" />}
+                            onClick={() => handleEdit(item)}
+                            className="!bg-[#3B82F6]/10 hover:!bg-[#3B82F6]/20 !text-[#3B82F6] h-8 text-xs font-medium rounded-lg"
+                        >
+                            Edit
+                        </Button>
+                        <Button 
+                            type="text" 
+                            icon={<DeleteOutlined className="text-red-400" />}
+                            onClick={() => handleDelete(item.id)}
+                            className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 h-8 text-xs font-medium rounded-lg"
+                        >
+                            Delete
+                        </Button>
                     </div>
                 ),
             }));
@@ -81,14 +96,43 @@ const UsersPage_comp = () => {
     };
 
     const coldata = [
-        { title: "Username", dataIndex: "username", key: "username", },
-        { title: "Email", dataIndex: "email", key: "email", },
-        { title: "Action", dataIndex: "action", key: "action", }
+        { 
+            title: "Username", 
+            dataIndex: "username", 
+            key: "username",
+            width: 180,
+            render: (text: string) => (
+                <Tooltip title={text} placement="topLeft">
+                    <div className="truncate max-w-[170px] font-semibold text-[#F8FAFC]">
+                        {text}
+                    </div>
+                </Tooltip>
+            )
+        },
+        { 
+            title: "Email", 
+            dataIndex: "email", 
+            key: "email",
+            width: 220,
+            render: (text: string) => (
+                <Tooltip title={text} placement="topLeft">
+                    <div className="truncate max-w-[210px] text-xs text-[#F8FAFC]/80">
+                        {text}
+                    </div>
+                </Tooltip>
+            )
+        },
+        { title: "Action", dataIndex: "action", key: "action", width: 140 }
     ];
 
     const User_button: React.FC = () => {
         return (
-            <Button type="primary" onClick={showDrawer}>
+            <Button 
+                type="primary" 
+                onClick={showDrawer}
+                icon={<PlusOutlined />}
+                className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none text-xs sm:text-sm font-medium h-9 px-4 rounded-lg shadow-md shadow-[#3B82F6]/20 flex items-center"
+            >
                 Add User
             </Button>
         );
@@ -123,32 +167,36 @@ const UsersPage_comp = () => {
     return (
         <>
             {contextHolder}
-            <MainAreaLayout title="User's List" description="Can Interact with users" loading={isLoading} extra={<User_button />}>
-                <CustomTable columns={coldata} data={usersData} serialNumberConfig={{ show: true, name: "Sr. No." }} />
+            <MainAreaLayout title="Users List" description="Manage sub-users and team accounts" loading={isLoading} extra={<User_button />}>
+                <CustomTable columns={coldata} data={usersData} serialNumberConfig={{ show: true, name: "Sr." }} />
             </MainAreaLayout>
             <Drawer
-                title={isEdit ? "Edit User" : "Create User"}
+                title={<span className="text-[#F8FAFC] font-semibold text-base">{isEdit ? "Edit User" : "Create User"}</span>}
                 onClose={onClose}
                 open={drawerOpen}
+                className="!bg-[#131B2E] text-[#F8FAFC]"
+                width={400}
+                style={{ maxWidth: '90vw' }}
             >
-                <div className='my-4'>
-                    <strong>Note:</strong>
-                    <ul>
-                        <li>Email Should be Unique</li>
-                    </ul>
+                <div className="p-3 mb-4 rounded-lg bg-[#090D16] border border-[#3B82F6]/20 text-xs text-[#F8FAFC]/70">
+                    <strong className="text-[#3B82F6]">Note:</strong> Email address must be unique across all system users.
                 </div>
-                <Form layout='vertical' form={form} initialValues={{ userName: '', userEmail: '' }}>
-                    <Form.Item label="UserName" name="username" rules={[
+                <Form layout="vertical" form={form} requiredMark={false}>
+                    <Form.Item label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Username</span>} name="username" rules={[
                         { required: true, message: 'Please enter username!' }]}>
-                        <Input placeholder="Enter UserName" />
+                        <Input placeholder="Enter Username" className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" />
                     </Form.Item>
-                    <Form.Item label="User Email" name="email" rules={[
+                    <Form.Item label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Email</span>} name="email" rules={[
                         { required: true, message: 'Please enter your email!' },
                         { type: 'email', message: 'Please enter a valid email!' },
                     ]}>
-                        <Input placeholder="Enter User Email" type='email' />
+                        <Input placeholder="Enter User Email" type="email" className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" />
                     </Form.Item>
-                    <Button type="primary" onClick={handleUserCreation}>
+                    <Button 
+                        type="primary" 
+                        onClick={handleUserCreation}
+                        className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none w-full h-10 mt-2 text-sm font-semibold rounded-lg shadow-lg shadow-[#3B82F6]/20"
+                    >
                         {isEdit ? 'Update User' : 'Create User'}
                     </Button>
                 </Form>

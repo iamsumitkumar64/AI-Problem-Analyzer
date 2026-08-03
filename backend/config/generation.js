@@ -71,27 +71,20 @@ const toBase64 = (filePath) => {
 
 // Send image to Gemini Vision for JSON report
 export const analyzeHandwrittenImage = async (base64Image) => {
-    const candidateModels = Array.from(new Set([
-        process.env.GEMINI_MODEL,
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-flash-latest",
-        "gemini-1.5-flash",
-        "gemini-1.5-pro"
-    ])).filter(Boolean);
-
     let result = null;
     let lastError = null;
 
-    for (const modelName of candidateModels) {
-        try {
-            const model = genAI.getGenerativeModel({ model: modelName });
-            result = await model.generateContent({
-                contents: [
-                    {
-                        parts: [
-                            {
-                                text: `Assume you are a report generator Extract Json like this
+    try {
+        const model = genAI.getGenerativeModel({
+            model: process.env.GEMINI_MODEL ||
+                "gemini-2.5-flash"
+        });
+        result = await model.generateContent({
+            contents: [
+                {
+                    parts: [
+                        {
+                            text: `Assume you are a report generator Extract Json like this
                         {
                             "name": "(Person name in english)(Person name in hindi)",
                             "mobileNo": 987,
@@ -109,22 +102,21 @@ export const analyzeHandwrittenImage = async (base64Image) => {
                         if english or hindi not present convert both and give me both filled
                         Make everything in this format and if tags are not found make them in others category
                                 `,
+                        },
+                        {
+                            inlineData: {
+                                mimeType: "image/jpeg",
+                                data: base64Image,
                             },
-                            {
-                                inlineData: {
-                                    mimeType: "image/jpeg",
-                                    data: base64Image,
-                                },
-                            },
-                        ],
-                    },
-                ],
-            });
-            if (result) break;
-        } catch (err) {
-            lastError = err;
-            console.warn(`Gemini model '${modelName}' failed, trying next candidate:`, err.message);
-        }
+                        },
+                    ],
+                },
+            ],
+        });
+        if (result) break;
+    } catch (err) {
+        lastError = err;
+        console.warn(`Gemini model '${modelName}' failed, trying next candidate:`, err.message);
     }
 
     if (!result) {

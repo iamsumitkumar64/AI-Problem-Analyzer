@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import CustomTable from '../customtable/index.tsx';
 import MainAreaLayout from '../main_area_layout/index.tsx';
-import { Button, Modal, Form, Input, message, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Modal, Form, Input, message, Upload, Tooltip } from 'antd';
+import { UploadOutlined, PlusOutlined, DownOutlined, EyeOutlined, DeleteOutlined, FileTextOutlined, LineChartOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import backend_url from '../../Libs/env.tsx';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Dropdown, Menu } from 'antd';
-import { DownCircleOutlined } from '@ant-design/icons';
-import {socket} from '../../config/socket';
+import { socket } from '../../config/socket';
 
 const RequestsPage_comp = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,22 +20,42 @@ const RequestsPage_comp = () => {
     const navigate = useNavigate();
 
     const actionMenu = (item: any) => (
-        <Menu className='text-center'>
-            <Menu.Item key="delete" onClick={() => handleDelete(item.id)} className='hover:!bg-red-500 hover:font-bold'>
-                ❌ Delete
+        <Menu className="!bg-[#131B2E] !border !border-[#3B82F6]/20 !p-1 rounded-xl shadow-xl">
+            <Menu.Item 
+                key="preview" 
+                onClick={() => handlepreview(item.id)} 
+                className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
+                icon={<EyeOutlined className="text-[#3B82F6]" />}
+            >
+                Preview PDF
             </Menu.Item>
-            <Menu.Item key="preview" onClick={() => handlepreview(item.id)} className='hover:!bg-blue-500'>
-                👁️ Preview
-            </Menu.Item>
-            {!item.documents ? (
-                <Menu.Item key="report" onClick={() => handlereport(item.id)} className='hover:!bg-yellow-500'>
-                    ✨ Generate Report
+            {!item.rawDocuments ? (
+                <Menu.Item 
+                    key="report" 
+                    onClick={() => handlereport(item.id)} 
+                    className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
+                    icon={<FileTextOutlined className="text-[#3B82F6]" />}
+                >
+                    Generate Report
                 </Menu.Item>
             ) : (
-                <Menu.Item key="analyse" onClick={() => handleAnalyse(item.id)} className='hover:!bg-yellow-500'>
-                    ✨ Analyse Report
+                <Menu.Item 
+                    key="analyse" 
+                    onClick={() => handleAnalyse(item.id)} 
+                    className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
+                    icon={<LineChartOutlined className="text-[#3B82F6]" />}
+                >
+                    Analyse Report
                 </Menu.Item>
             )}
+            <Menu.Item 
+                key="delete" 
+                onClick={() => handleDelete(item.id)} 
+                className="!text-[#F8FAFC] hover:!bg-red-500/20 !rounded-lg"
+                icon={<DeleteOutlined className="text-red-400" />}
+            >
+                Delete
+            </Menu.Item>
         </Menu>
     );
 
@@ -47,22 +65,28 @@ const RequestsPage_comp = () => {
             const ans = await axios.get(`${backend_url}/request`, { withCredentials: true });
             const requests = ans.data.data.map((item: any) => ({
                 ...item,
+                rawDocuments: item.documents,
                 documents: (
-                    <Link to={`/main/report/${item.id}`} className='text-blue-500 text-1xl font-bold'>{item.documents}</Link>
+                    <Link 
+                        to={`/main/report/${item.id}`} 
+                        className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30 hover:bg-[#3B82F6]/20 transition-all whitespace-nowrap"
+                    >
+                        📄 {item.documents || 0} Docs
+                    </Link>
+                ),
+                status: (
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${
+                        item.status === 'Complete' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                        item.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                        'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20'
+                    }`}>
+                        {item.status || 'Created'}
+                    </span>
                 ),
                 action: (
-                    // <div>
-                    //     <Button type='primary' className='mx-2 my-2' ghost onClick={() => handleDelete(item.id)}>&#x274C;</Button>
-                    //     <Button type='primary' className='mx-2 my-2' ghost onClick={() => handlepreview(item.id)}>&#128064;</Button>
-                    //     {!item.documents ?
-                    //         <Button type='primary' className='mx-2 my-2' ghost onClick={() => handlereport(item.id)}>&#10024;</Button>
-                    //         :
-                    //         <Button type='primary' className='mx-2 my-2' ghost onClick={() => handleAnalyse(item.id)}>&#10024;</Button>
-                    //     }
-                    // </div>
                     <Dropdown overlay={actionMenu(item)} trigger={['click']}>
-                        <Button>
-                            Actions <DownCircleOutlined />
+                        <Button className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30 hover:!border-[#3B82F6] text-xs h-8 px-3 rounded-lg flex items-center gap-1 whitespace-nowrap">
+                            Actions <DownOutlined className="text-[10px]" />
                         </Button>
                     </Dropdown>
                 ),
@@ -70,33 +94,67 @@ const RequestsPage_comp = () => {
             setIsdata(requests);
         } catch (err) {
             console.log(err);
-        }
-        finally {
+        } finally {
             setTimeout(() => {
                 setIsLoading(false);
-            }, 300)
+            }, 300);
         }
     };
 
-useEffect(() => {
-  fetch(); 
-  const handleReportSocket = () => {
-  fetch(); 
-  };
-  socket.on('report', handleReportSocket);
-  return () => {
-    socket.off('report', handleReportSocket);
-  };
-}, []);
+    useEffect(() => {
+        fetch(); 
+        const handleReportSocket = () => {
+            fetch(); 
+        };
+        socket.on('report', handleReportSocket);
+        return () => {
+            socket.off('report', handleReportSocket);
+        };
+    }, []);
 
     const coldata = [
-        { title: "Title", dataIndex: "title", key: "title" },
-        { title: "Description", dataIndex: "description", key: "description" },
-        { title: "CreadtedAt", dataIndex: "createdAt", key: "createdAt" },
-        { title: "Documents", dataIndex: "documents", key: "documents" },
-        { title: "Status", dataIndex: "status", key: "status" },
-        { title: "Action", dataIndex: "action", key: "action" },
+        { 
+            title: "Title", 
+            dataIndex: "title", 
+            key: "title",
+            width: 160,
+            render: (text: string) => (
+                <Tooltip title={text} placement="topLeft">
+                    <div className="truncate max-w-[150px] font-semibold text-[#F8FAFC]">
+                        {text}
+                    </div>
+                </Tooltip>
+            )
+        },
+        { 
+            title: "Description", 
+            dataIndex: "description", 
+            key: "description",
+            width: 240,
+            render: (text: string) => (
+                <Tooltip title={text} placement="topLeft">
+                    <div className="line-clamp-2 max-w-[230px] text-xs text-[#F8FAFC]/80 whitespace-normal">
+                        {text}
+                    </div>
+                </Tooltip>
+            )
+        },
+        { 
+            title: "Created At", 
+            dataIndex: "createdAt", 
+            key: "createdAt",
+            width: 170,
+            render: (text: string) => (
+                <span className="text-xs text-[#F8FAFC]/60 whitespace-nowrap">
+                    {text ? new Date(text).toLocaleString() : '-'}
+                </span>
+            )
+        },
+        { title: "Documents", dataIndex: "documents", key: "documents", width: 110 },
+        { title: "Status", dataIndex: "status", key: "status", width: 110 },
+        { title: "Action", dataIndex: "action", key: "action", width: 120 },
     ];
+
     const handleDelete = async (id: any) => {
         await axios.delete(`${backend_url}/request/${id}`, { withCredentials: true });
         fetch();
@@ -114,7 +172,7 @@ useEffect(() => {
             const ans = await axios.get(`${backend_url}/request/report/${id}`, { withCredentials: true });
             if (ans.status === 200) {
                 await fetch();
-                messageApi.success('Report Sent');
+                messageApi.success('Report Generation Started');
             } else {
                 messageApi.error('Failed to generate report');
             }
@@ -131,11 +189,10 @@ useEffect(() => {
     };
 
     const handleAnalyse = async (id: any) => {
-        // messageApi.info(id);
         setIsLoading(true);
         setTimeout(() => {
             navigate(`/main/anlayse/${id}`);
-        }, 700);
+        }, 300);
     };
 
     const showModal = () => {
@@ -144,7 +201,12 @@ useEffect(() => {
     };
 
     const User_button: React.FC = () => (
-        <Button type="primary" onClick={showModal}>
+        <Button 
+            type="primary" 
+            onClick={showModal}
+            icon={<PlusOutlined />}
+            className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none text-xs sm:text-sm font-medium h-9 px-4 rounded-lg shadow-md shadow-[#3B82F6]/20 flex items-center"
+        >
             Add Request
         </Button>
     );
@@ -162,7 +224,7 @@ useEffect(() => {
             fetch();
             messageApi.success('Request created successfully!');
         } catch (errorInfo: any) {
-            messageApi.error(errorInfo?.response?.data?.message);
+            messageApi.error(errorInfo?.response?.data?.message || 'Validation failed');
             console.log('Validation Failed:', errorInfo);
         }
     };
@@ -171,80 +233,99 @@ useEffect(() => {
         setModalOpen(false);
         form.resetFields();
     };
+
     const onCloseIframe = () => {
         setIsFrame(false);
     };
+
     return (
         <>
             {contextHolder}
             <MainAreaLayout
-                title="Requests's List"
-                description="Analyse Your Request's Using AI"
+                title="Requests List"
+                description="Analyze your handwritten problem requests using AI"
                 loading={isLoading}
                 extra={<User_button />}
             >
                 <CustomTable
                     columns={coldata}
                     data={isdata}
-                    serialNumberConfig={{ show: true, name: "Sr. No." }}
+                    serialNumberConfig={{ show: true, name: "Sr." }}
                 />
             </MainAreaLayout>
+
+            {/* Create Request Modal */}
             <Modal
-                title="Create Request"
+                title={<span className="text-[#F8FAFC] font-semibold text-base sm:text-lg">Create New Request</span>}
                 open={ModalOpen}
                 onOk={onOk}
                 onCancel={onClose}
+                okText="Submit"
+                className="!bg-[#131B2E] text-[#F8FAFC]"
+                okButtonProps={{ className: "!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none" }}
+                cancelButtonProps={{ className: "!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" }}
+                width={500}
+                style={{ maxWidth: '95vw', top: 20 }}
             >
                 <Form
-                    layout='vertical'
+                    layout="vertical"
                     form={form}
                     initialValues={{ title: '', description: '' }}
+                    requiredMark={false}
+                    className="pt-2"
                 >
                     <Form.Item
-                        label="Title"
+                        label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Title</span>}
                         name="title"
                         rules={[{ required: true, message: 'Please enter title!' }]}
                     >
-                        <Input placeholder="Enter title" />
+                        <Input placeholder="Enter request title" className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" />
                     </Form.Item>
+
                     <Form.Item
-                        label="Description"
+                        label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Description</span>}
                         name="description"
                         rules={[{ required: true, message: 'Please enter description' }]}
                     >
-                        <Input.TextArea placeholder="Enter description" />
+                        <Input.TextArea placeholder="Enter request description" rows={3} className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" />
                     </Form.Item>
+
                     <Form.Item
-                        label="PDF File"
+                        label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">PDF Document</span>}
                         name="pdffile"
                         rules={[{ required: true, message: 'Please upload a PDF file!' }]}
                         valuePropName="fileList"
                         getValueFromEvent={e => Array.isArray(e) ? e : e?.fileList}
                     >
-                        <Upload beforeUpload={() => false}
+                        <Upload 
+                            beforeUpload={() => false}
                             accept="application/pdf"
-                            maxCount={1}>
-                            <Button icon={<UploadOutlined />}>
-                                <strong>Select Request PDF</strong>
-                                <br />
+                            maxCount={1}
+                        >
+                            <Button icon={<UploadOutlined className="text-[#3B82F6]" />} className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30">
+                                Select PDF Document
                             </Button>
                         </Upload>
                     </Form.Item>
                 </Form>
             </Modal>
+
+            {/* Preview Modal */}
             <Modal
-                title="Preview File"
+                title={<span className="text-[#F8FAFC] font-semibold text-base sm:text-lg">Document Preview</span>}
                 open={isIframe}
                 onCancel={onCloseIframe}
-                footer={'Made By Sumit Kumar'}
+                footer={null}
                 width={800}
-                style={{ top: 0 }}
+                style={{ maxWidth: '95vw', top: 20 }}
             >
-                <iframe
-                    src={iframeFile as string}
-                    style={{ width: '100%', height: '78vh' }}
-                    title="PDF Preview"
-                ></iframe>
+                <div className="w-full h-[70vh] rounded-lg overflow-hidden border border-[#3B82F6]/20 bg-[#090D16]">
+                    <iframe
+                        src={iframeFile as string}
+                        className="w-full h-full border-none"
+                        title="PDF Preview"
+                    />
+                </div>
             </Modal>
         </>
     );

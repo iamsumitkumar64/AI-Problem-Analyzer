@@ -26,22 +26,24 @@ const LoginSignup: React.FC = () => {
     return (
         <>
             {contextHolder}
-            <style>{`
-                .ant-form-item-label > label {
-                    color: white !important;
-                }
-            `}</style>
+            <div className="flex items-center justify-center min-h-screen bg-[#090D16] p-4 text-[#F8FAFC]">
+                <div className="w-full max-w-md p-6 sm:p-8 bg-[#131B2E] border border-[#3B82F6]/20 shadow-2xl rounded-2xl max-h-[95vh] overflow-y-auto">
+                    <div className="text-center mb-6">
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#3B82F6]/10 text-[#3B82F6] mb-3 text-2xl font-bold border border-[#3B82F6]/30">
+                            ⚡
+                        </div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-[#F8FAFC]">Welcome Back</h2>
+                        <p className="text-xs sm:text-sm text-[#F8FAFC]/60 mt-1">AI Problem Analyzer System</p>
+                    </div>
 
-            <div className="rounded-es-full rounded-se-full flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-500 to-gray-800">
-                <div className="w-full max-w-md p-8 bg-gray-900 shadow-lg rounded-lg">
-                    <h2 className="text-3xl font-semibold text-center text-white mb-6">Welcome Back!</h2>
                     <Form
                         form={loginForm}
                         onFinish={handleLogin}
                         layout="vertical"
+                        requiredMark={false}
                     >
                         <Form.Item
-                            label="Email"
+                            label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Email</span>}
                             name="email"
                             rules={[
                                 { required: true, message: 'Please input your email!' },
@@ -49,36 +51,38 @@ const LoginSignup: React.FC = () => {
                             ]}
                         >
                             <Input
-                                prefix={<UserOutlined style={{ color: '#fff' }} />}
+                                prefix={<UserOutlined className="text-[#3B82F6]" />}
                                 placeholder="Enter your email"
-                                style={{ backgroundColor: '#444', color: '#fff' }}
+                                className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30 hover:!border-[#3B82F6] focus:!border-[#3B82F6] h-10 sm:h-11 rounded-lg"
                             />
                         </Form.Item>
+
                         <Form.Item
-                            label="Password"
+                            label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Password</span>}
                             name="password"
                             rules={[{ required: true, message: 'Please input your password!' }]}
                         >
                             <Input.Password
-                                prefix={<LockOutlined style={{ color: '#fff' }} />}
+                                prefix={<LockOutlined className="text-[#3B82F6]" />}
                                 placeholder="Enter your password"
-                                style={{ backgroundColor: '#444', color: '#fff' }}
+                                className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30 hover:!border-[#3B82F6] focus:!border-[#3B82F6] h-10 sm:h-11 rounded-lg"
                             />
                         </Form.Item>
-                        <Form.Item>
+
+                        <Form.Item className="mt-6 mb-4">
                             <Button
                                 type="primary"
                                 htmlType="submit"
                                 block
-                                style={{ backgroundColor: '#1D4ED8', borderColor: '#1D4ED8' }}
+                                className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none h-10 sm:h-11 text-sm font-semibold rounded-lg shadow-lg shadow-[#3B82F6]/25 transition-all"
                             >
                                 Login
                             </Button>
                         </Form.Item>
 
-                        <div className="text-center text-gray-400 text-sm mt-4">
+                        <div className="text-center text-[#F8FAFC]/60 text-xs sm:text-sm mt-4">
                             Don't have an account?{' '}
-                            <Link to="/register" className="text-blue-400 hover:underline">
+                            <Link to="/register" className="text-[#3B82F6] font-medium hover:underline">
                                 Register here
                             </Link>
                         </div>

@@ -25,7 +25,7 @@ interface PieCompProps {
 }
 
 export const Pie_Comp: React.FC<PieCompProps> = ({ data }) => {
-  if (!data) return <p style={{ textAlign: 'center' }}>Click on a bar to see pie chart of that user</p>;
+  if (!data) return <p className="text-center text-[#F8FAFC]/50 py-4">Select a bar to view tag breakdown</p>;
 
   const tagCount: Record<string, number> = {};
   data.problems.forEach((problem) => {
@@ -41,20 +41,32 @@ export const Pie_Comp: React.FC<PieCompProps> = ({ data }) => {
         label: 'Problem Tags Distribution',
         data: Object.values(tagCount),
         backgroundColor: [
-          '#F87171', '#60A5FA', '#FCD34D', '#34D399',
-          '#F87171', '#60A5FA', '#FCD34D', '#34D399',
-          '#C084FC', '#F472B6', '#38BDF8', '#A78BFA'
+          '#3B82F6', '#2563EB', '#60A5FA', '#93C5FD',
+          '#1D4ED8', '#38BDF8', '#0284C7', '#0EA5E9'
         ],
-        borderColor: '#ffffff',
-        borderWidth: 1,
+        borderColor: '#131B2E',
+        borderWidth: 2,
       },
     ],
   };
 
+  const pieOptions = {
+    plugins: {
+      legend: {
+        labels: {
+          color: '#F8FAFC',
+          font: { family: 'Inter, sans-serif' }
+        }
+      }
+    }
+  };
+
   return (
-    <div style={{ width: '50%', margin: '2rem auto' }}>
-      <h3 style={{ textAlign: 'center' }}>{data.name}'s Problem Tag Distribution</h3>
-      <Pie data={pieData} />
+    <div className="w-full max-w-xs mx-auto py-4 text-center">
+      <h4 className="text-sm font-semibold text-[#F8FAFC] mb-3">
+        {data.name}'s Tag Distribution
+      </h4>
+      <Pie data={pieData} options={pieOptions} />
     </div>
   );
 };

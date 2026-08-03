@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, message } from "antd";
+import { Button, message, Tooltip } from "antd";
+import { EyeOutlined, RightOutlined } from "@ant-design/icons";
 import axios from "axios";
 import CustomTable from "../customtable/index.tsx";
 import MainAreaLayout from "../main_area_layout";
@@ -27,15 +28,14 @@ interface TableDataInterface {
     mobileNo: number,
     wardNo: string,
     numberOfProblems: number,
-    rawTags: string[], // used for filtering
-    tags: React.ReactNode, // used for rendering
+    rawTags: string[],
+    tags: React.ReactNode,
     action: React.ReactNode
 }
 
-
 const ReportsPage_comp = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [messageApi, contextHolder] = message.useMessage();
+    const [, contextHolder] = message.useMessage();
     const [isdata, setIsdata] = useState([]);
     const navigate = useNavigate();
 
@@ -52,22 +52,29 @@ const ReportsPage_comp = () => {
                         ...item,
                         rawTags: allTags,
                         tags: (
-                            <div>
+                            <div className="flex flex-wrap gap-1 max-w-[260px] max-h-16 overflow-y-auto pr-1">
                                 {allTags.map((tag, index) => (
-                                    <p
+                                    <span
                                         key={index}
-                                        className="border border-gray-400 text-blue-700 px-2 py-1 rounded-2xl text-sm inline-block m-1"
+                                        className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/25 whitespace-nowrap"
                                     >
                                         {tag}
-                                    </p>
+                                    </span>
                                 ))}
                             </div>
                         ),
-                        action: <Button onClick={() => handleReport(item._id)}>View Report</Button>,
+                        action: (
+                            <Button 
+                                icon={<EyeOutlined />}
+                                onClick={() => handleReport(item._id)}
+                                className="!bg-[#3B82F6] hover:!bg-[#2563EB] !text-[#F8FAFC] !border-none text-xs h-8 px-3 rounded-lg flex items-center gap-1 shadow-sm whitespace-nowrap"
+                            >
+                                View Report
+                            </Button>
+                        ),
                     };
                 });
                 setIsdata(data);
-                // messageApi.success(ans.data.message);
             }
             fetch();
         } catch (err) {
@@ -76,24 +83,22 @@ const ReportsPage_comp = () => {
         finally {
             setTimeout(() => {
                 setIsLoading(false);
-            }, 700)
+            }, 500)
         }
     }, []);
 
     const handleReport = (id: any) => {
-        // messageApi.info(id)
         setIsLoading(true);
         const pathSegments = window.location.pathname.split('/');
         const req_id = pathSegments[pathSegments.length - 1];
         setTimeout(() => {
             if (id) {
                 navigate(`/main/report/${encodeURIComponent(req_id)}/viewreport/${encodeURIComponent(id)}`);
-                // window.location.href = `/main/report/${encodeURIComponent(req_id)}/viewreport/${encodeURIComponent(id)}`;
             } else {
                 console.error("ID is missing");
             }
             setIsLoading(false);
-        }, 1000);
+        }, 300);
     };
 
     const coldata = [
@@ -101,11 +106,20 @@ const ReportsPage_comp = () => {
             title: "Name",
             dataIndex: "name",
             key: "name",
+            width: 160,
+            render: (text: string) => (
+                <Tooltip title={text} placement="topLeft">
+                    <div className="truncate max-w-[150px] font-semibold text-[#F8FAFC]">
+                        {text}
+                    </div>
+                </Tooltip>
+            )
         },
         {
             title: "Ward No.",
             dataIndex: "wardNo",
             key: "wardNo",
+            width: 100,
             sorter: (a: TableDataInterface, b: TableDataInterface) => a.wardNo.localeCompare(b.wardNo),
             filters: Array.from(new Set(isdata.map((item: any) => item.wardNo))).map((ward) => ({
                 text: ward,
@@ -117,23 +131,27 @@ const ReportsPage_comp = () => {
             title: "Mobile No.",
             dataIndex: "mobileNo",
             key: "mobileNo",
+            width: 130,
+            render: (text: any) => <span className="text-xs text-[#F8FAFC]/80 whitespace-nowrap">{text}</span>
         },
         {
-            title: "Number of Problems",
+            title: "Problems",
             dataIndex: "numberOfProblems",
             key: "numberOfProblems",
+            width: 110,
             sorter: (a: TableDataInterface, b: TableDataInterface) =>
-                (a as any).numberOfProblems - (b as any).numberOfProblems, // or fix below
+                (a as any).numberOfProblems - (b as any).numberOfProblems,
+            render: (text: any) => (
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30 whitespace-nowrap">
+                    {text}
+                </span>
+            )
         },
-        // {
-        //     title: "Problems",
-        //     dataIndex: "problems",
-        //     key: "problems",
-        // },
         {
             title: "Tags",
             dataIndex: "tags",
             key: "tags",
+            width: 270,
             render: (_: any, record: any) => record.tags,
             filters: Array.from(
                 new Set(isdata.flatMap((item: any) => item.rawTags))
@@ -147,33 +165,35 @@ const ReportsPage_comp = () => {
             title: "Action",
             dataIndex: "action",
             key: "action",
+            width: 130,
         },
     ];
-    const redirectreports = () => {
-        messageApi.info('Already Here');
-        // window.location.reload();
-    }
+
     const redirectRequests = () => {
         navigate('/main/requests');
-        // window.location.href = `/main/requests`;
     }
+
     return (
         <>
             {contextHolder}
             <MainAreaLayout
-                title="AI Report"
-                description="Check your Report"
+                title="AI Processed Report"
+                description="Extracted details and issue categorization"
                 loading={isLoading}
             >
-                <div className="inline-flex">
-                    <p onClick={redirectRequests} className="hover:cursor-pointer">Request</p>
-                    <span className="mx-2">{'>'}</span>
-                    <p onClick={redirectreports} className="hover:cursor-pointer">Report</p>
+                {/* Breadcrumbs */}
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-4 text-[#F8FAFC]/60">
+                    <span onClick={redirectRequests} className="cursor-pointer hover:text-[#3B82F6] transition-colors">
+                        Requests
+                    </span>
+                    <RightOutlined className="text-[10px]" />
+                    <span className="text-[#3B82F6] font-semibold">Report Overview</span>
                 </div>
+
                 <CustomTable
                     columns={coldata}
                     data={isdata}
-                    serialNumberConfig={{ show: true, name: "Sr. No." }}
+                    serialNumberConfig={{ show: true, name: "Sr." }}
                 />
             </MainAreaLayout>
         </>
