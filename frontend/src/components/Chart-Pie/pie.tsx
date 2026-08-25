@@ -25,11 +25,11 @@ interface PieCompProps {
 }
 
 export const Pie_Comp: React.FC<PieCompProps> = ({ data }) => {
-  if (!data) return <p className="text-center text-[#F8FAFC]/50 py-4">Select a bar to view tag breakdown</p>;
+  if (!data) return <p className="text-center text-zinc-500 py-4">Select a bar to view tag breakdown</p>;
 
   const tagCount: Record<string, number> = {};
-  data.problems.forEach((problem) => {
-    problem.tags.forEach((tag) => {
+  (data.problems || []).forEach((problem) => {
+    (problem.tags || []).forEach((tag) => {
       tagCount[tag] = (tagCount[tag] || 0) + 1;
     });
   });
@@ -38,14 +38,15 @@ export const Pie_Comp: React.FC<PieCompProps> = ({ data }) => {
     labels: Object.keys(tagCount),
     datasets: [
       {
-        label: 'Problem Tags Distribution',
+        label: 'Issues Count',
         data: Object.values(tagCount),
         backgroundColor: [
-          '#3B82F6', '#2563EB', '#60A5FA', '#93C5FD',
-          '#1D4ED8', '#38BDF8', '#0284C7', '#0EA5E9'
+          '#FFFFFF', '#D4D4D8', '#A1A1AA', '#71717A',
+          '#52525B', '#3F3F46', '#27272A', '#E4E4E7'
         ],
-        borderColor: '#131B2E',
+        borderColor: '#121214',
         borderWidth: 2,
+        hoverOffset: 4,
       },
     ],
   };
@@ -53,19 +54,18 @@ export const Pie_Comp: React.FC<PieCompProps> = ({ data }) => {
   const pieOptions = {
     plugins: {
       legend: {
+        position: 'bottom' as const,
         labels: {
-          color: '#F8FAFC',
-          font: { family: 'Inter, sans-serif' }
+          color: '#A1A1AA',
+          font: { family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', size: 11 },
+          padding: 12,
         }
       }
     }
   };
 
   return (
-    <div className="w-full max-w-xs mx-auto py-4 text-center">
-      <h4 className="text-sm font-semibold text-[#F8FAFC] mb-3">
-        {data.name}'s Tag Distribution
-      </h4>
+    <div className="w-full max-w-sm mx-auto py-2 text-center">
       <Pie data={pieData} options={pieOptions} />
     </div>
   );

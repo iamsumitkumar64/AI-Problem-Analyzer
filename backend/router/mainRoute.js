@@ -13,6 +13,7 @@ const mainRouter = Router();
 mainRouter.get('/session', homePage);
 mainRouter.post('/login', loginUser);
 mainRouter.post('/register', registerUser);
+mainRouter.get('/logout', logoutUser);
 mainRouter.post('/logout', logoutUser);
 mainRouter.post('/checkLogin', checkLoginStatus);
 

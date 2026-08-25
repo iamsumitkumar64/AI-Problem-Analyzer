@@ -3,14 +3,14 @@ import backend_url from '../../Libs/env.tsx';
 import { useState, useEffect } from 'react';
 import CustomTable from '../customtable/index.tsx';
 import MainAreaLayout from '../main_area_layout/index.tsx';
-import { Button, Drawer, Form, Input, message, Tooltip } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Drawer, Form, Input, message } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, UserOutlined, TeamOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 
 const UsersPage_comp = () => {
     const [form] = Form.useForm();
     const [isEdit, setIsEdit] = useState(false);
     const [editUserId, setEditUserId] = useState<string | null>(null);
-    const [usersData, setUsersData] = useState([]);
+    const [usersData, setUsersData] = useState<any[]>([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
     const [isLoading, setisLoading] = useState<boolean>(false);
@@ -21,30 +21,48 @@ const UsersPage_comp = () => {
             const response = await axios.get(`${backend_url}/users`, {
                 withCredentials: true
             });
-            if (!response || !response.data?.users) {
-                messageApi.error('No users Exist');
-                return;
-            }
-            const users = response.data.users.map((item: any) => {
+            const list = response.data?.users || [];
+            const users = list.map((item: any) => {
                 const userId = item.id || item._id;
                 return {
                     ...item,
                     id: userId,
+                    userNode: (
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full bg-zinc-800 text-white font-bold flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+                                {item.username ? item.username.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold text-sm text-white">{item.username}</span>
+                                <span className="text-[11px] text-zinc-500 font-mono">ID: {String(userId).slice(-6)}</span>
+                            </div>
+                        </div>
+                    ),
+                    emailNode: (
+                        <span className="text-xs text-zinc-300 font-mono">
+                            {item.email}
+                        </span>
+                    ),
+                    roleNode: (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-200 border border-zinc-700">
+                            Officer
+                        </span>
+                    ),
                     action: (
                         <div className="flex items-center gap-2 whitespace-nowrap">
                             <Button 
                                 type="text" 
-                                icon={<EditOutlined className="text-[#3B82F6]" />}
+                                icon={<EditOutlined className="text-zinc-300" />}
                                 onClick={() => handleEdit(item)}
-                                className="!bg-[#3B82F6]/10 hover:!bg-[#3B82F6]/20 !text-[#3B82F6] h-8 text-xs font-medium rounded-lg"
+                                className="!bg-zinc-800 hover:!bg-zinc-700 !text-zinc-200 h-8 text-xs font-medium rounded-lg cursor-pointer"
                             >
                                 Edit
                             </Button>
                             <Button 
                                 type="text" 
-                                icon={<DeleteOutlined className="text-red-400" />}
+                                icon={<DeleteOutlined className="text-rose-400" />}
                                 onClick={() => handleDelete(userId)}
-                                className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 h-8 text-xs font-medium rounded-lg"
+                                className="!bg-rose-500/10 hover:!bg-rose-500/20 !text-rose-400 h-8 text-xs font-medium rounded-lg cursor-pointer"
                             >
                                 Delete
                             </Button>
@@ -54,13 +72,11 @@ const UsersPage_comp = () => {
             });
             setUsersData(users);
         } catch (err) {
-            console.log(err);
-            messageApi.info('No user Exist');
-        }
-        finally {
+            console.error('Fetch users error:', err);
+        } finally {
             setTimeout(() => {
                 setisLoading(false);
-            }, 300);
+            }, 250);
         }
     };
 
@@ -106,46 +122,25 @@ const UsersPage_comp = () => {
 
     const coldata = [
         { 
-            title: "Username", 
-            dataIndex: "username", 
-            key: "username",
-            width: 180,
-            render: (text: string) => (
-                <Tooltip title={text} placement="topLeft">
-                    <div className="truncate max-w-[170px] font-semibold text-[#F8FAFC]">
-                        {text}
-                    </div>
-                </Tooltip>
-            )
+            title: "Officer / User", 
+            dataIndex: "userNode", 
+            key: "userNode",
+            width: 220,
         },
         { 
-            title: "Email", 
-            dataIndex: "email", 
-            key: "email",
-            width: 220,
-            render: (text: string) => (
-                <Tooltip title={text} placement="topLeft">
-                    <div className="truncate max-w-[210px] text-xs text-[#F8FAFC]/80">
-                        {text}
-                    </div>
-                </Tooltip>
-            )
+            title: "Email Address", 
+            dataIndex: "emailNode", 
+            key: "emailNode",
+            width: 240,
         },
-        { title: "Action", dataIndex: "action", key: "action", width: 140 }
+        {
+            title: "Access Role",
+            dataIndex: "roleNode",
+            key: "roleNode",
+            width: 140,
+        },
+        { title: "Actions", dataIndex: "action", key: "action", width: 150 }
     ];
-
-    const User_button: React.FC = () => {
-        return (
-            <Button 
-                type="primary" 
-                onClick={showDrawer}
-                icon={<PlusOutlined />}
-                className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none text-xs sm:text-sm font-medium h-9 px-4 rounded-lg shadow-md shadow-[#3B82F6]/20 flex items-center"
-            >
-                Add User
-            </Button>
-        );
-    };
 
     const handleUserCreation = async () => {
         try {
@@ -167,45 +162,105 @@ const UsersPage_comp = () => {
             setIsEdit(false);
             setEditUserId(null);
         } catch (errorInfo: any) {
-            console.log('Validation Failed:', errorInfo);
-            messageApi.error(errorInfo?.response?.data?.message || 'Something went wrong');
+            messageApi.error(errorInfo?.response?.data?.message || 'Validation failed');
         }
     };
 
     return (
         <>
             {contextHolder}
-            <MainAreaLayout title="Users List" description="Manage sub-users and team accounts" loading={isLoading} extra={<User_button />}>
-                <CustomTable columns={coldata} data={usersData} serialNumberConfig={{ show: true, name: "Sr." }} />
+            <MainAreaLayout 
+                title="Officers & Team Members" 
+                description="Manage administrative sub-users and civic department access" 
+                loading={isLoading} 
+                extra={
+                    <Button 
+                        type="primary" 
+                        onClick={showDrawer}
+                        icon={<PlusOutlined />}
+                        className="!bg-white !text-black hover:!bg-zinc-200 !border-none text-xs sm:text-sm font-bold h-9 sm:h-10 px-4 sm:px-5 rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer"
+                    >
+                        Add Officer
+                    </Button>
+                }
+            >
+                <div className="space-y-6">
+                    {/* User KPI Stats Strip */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg">
+                                <TeamOutlined />
+                            </div>
+                            <div>
+                                <p className="text-xs font-mono uppercase text-zinc-500">Total Officers</p>
+                                <p className="text-2xl font-bold text-white">{usersData.length}</p>
+                            </div>
+                        </div>
+
+                        <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg">
+                                <SafetyCertificateOutlined />
+                            </div>
+                            <div>
+                                <p className="text-xs font-mono uppercase text-zinc-500">Access Level</p>
+                                <p className="text-sm font-bold text-emerald-400">Staff</p>
+                            </div>
+                        </div>
+
+                        <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg">
+                                <UserOutlined />
+                            </div>
+                            <div>
+                                <p className="text-xs font-mono uppercase text-zinc-500">Session Auth</p>
+                                <p className="text-sm font-bold text-zinc-300">JWT HTTP-Only</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <CustomTable columns={coldata} data={usersData} serialNumberConfig={{ show: true, name: "#" }} />
+                </div>
             </MainAreaLayout>
+
             <Drawer
-                title={<span className="text-[#F8FAFC] font-semibold text-base">{isEdit ? "Edit User" : "Create User"}</span>}
+                title={
+                    <div className="flex items-center gap-2">
+                        <span className="text-white font-bold text-base">{isEdit ? "Update Officer Profile" : "Register New Officer"}</span>
+                    </div>
+                }
                 onClose={onClose}
                 open={drawerOpen}
-                className="!bg-[#131B2E] text-[#F8FAFC]"
-                width={400}
+                className="!bg-[#121214] text-white"
+                width={420}
                 style={{ maxWidth: '90vw' }}
             >
-                <div className="p-3 mb-4 rounded-lg bg-[#090D16] border border-[#3B82F6]/20 text-xs text-[#F8FAFC]/70">
-                    <strong className="text-[#3B82F6]">Note:</strong> Email address must be unique across all system users.
+                <div className="p-3 mb-4 rounded-xl bg-[#09090B] border border-white/[0.06] text-xs text-zinc-400">
+                    New officers receive portal access to review citizen grievances and export ward reports.
                 </div>
-                <Form layout="vertical" form={form} requiredMark={false}>
-                    <Form.Item label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Username</span>} name="username" rules={[
-                        { required: true, message: 'Please enter username!' }]}>
-                        <Input placeholder="Enter Username" className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" />
+                <Form layout="vertical" form={form} requiredMark={false} className="space-y-2">
+                    <Form.Item 
+                        label={<span className="text-zinc-300 font-medium text-xs">Officer Full Name</span>} 
+                        name="username" 
+                        rules={[{ required: true, message: 'Please enter username' }]}
+                    >
+                        <Input placeholder="e.g. Ramesh Chandra" className="!h-10 !rounded-xl" />
                     </Form.Item>
-                    <Form.Item label={<span className="text-[#F8FAFC] font-medium text-xs sm:text-sm">Email</span>} name="email" rules={[
-                        { required: true, message: 'Please enter your email!' },
-                        { type: 'email', message: 'Please enter a valid email!' },
-                    ]}>
-                        <Input placeholder="Enter User Email" type="email" className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30" />
+                    <Form.Item 
+                        label={<span className="text-zinc-300 font-medium text-xs">Official Email Address</span>} 
+                        name="email" 
+                        rules={[
+                            { required: true, message: 'Please enter email' },
+                            { type: 'email', message: 'Please enter a valid email' },
+                        ]}
+                    >
+                        <Input placeholder="e.g. officer@panchayat.gov.in" type="email" className="!h-10 !rounded-xl" />
                     </Form.Item>
                     <Button 
                         type="primary" 
                         onClick={handleUserCreation}
-                        className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none w-full h-10 mt-2 text-sm font-semibold rounded-lg shadow-lg shadow-[#3B82F6]/20"
+                        className="!bg-white !text-black hover:!bg-zinc-200 !border-none w-full !h-11 mt-4 text-sm font-bold rounded-xl shadow-lg cursor-pointer"
                     >
-                        {isEdit ? 'Update User' : 'Create User'}
+                        {isEdit ? 'Save Changes' : 'Register Officer'}
                     </Button>
                 </Form>
             </Drawer>

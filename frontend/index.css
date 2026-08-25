@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --color-bg-primary: #090D16;
-  --color-bg-surface: #131B2E;
-  --color-accent: #3B82F6;
-  --color-text: #F8FAFC;
+  --color-bg-base: #09090B;
+  --color-bg-surface: #121214;
+  --color-bg-elevated: #18181B;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.2);
+  --color-accent-paper: #FFFFFF;
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #A1A1AA;
+  --color-text-muted: #71717A;
 }
 
 * {
@@ -16,44 +21,156 @@
 }
 
 body {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #09090B;
+  color: #FAFAFA;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   min-width: 320px;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
+/* Subtle sleek monochrome scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090D16;
+  background: #09090B;
 }
 ::-webkit-scrollbar-thumb {
-  background: #131B2E;
-  border-radius: 4px;
+  background: #27272A;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B82F6;
+  background: #3F3F46;
 }
 
-/* Responsive helpers for <= 500px width/height */
-@media (max-width: 500px), (max-height: 500px) {
-  .ant-layout-sider {
-    min-width: 60px !important;
-    max-width: 60px !important;
-    width: 60px !important;
-  }
-  .ant-layout-header {
-    padding: 12px 16px !important;
-    height: auto !important;
-  }
-  .ant-layout-content {
-    padding: 12px 16px !important;
-  }
-  .responsive-p-sm {
-    padding: 12px !important;
+/* Ant Design Global Pure Dark / Paper Overrides */
+.ant-table-wrapper {
+  background: transparent !important;
+}
+
+.ant-table {
+  background: transparent !important;
+  color: #FAFAFA !important;
+}
+
+.ant-table-thead > tr > th {
+  background: #121214 !important;
+  color: #A1A1AA !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 12px 16px !important;
+}
+
+.ant-table-tbody > tr > td {
+  background: transparent !important;
+  color: #E4E4E7 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 14px 16px !important;
+  font-size: 13px !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.ant-pagination {
+  margin: 16px !important;
+}
+
+.ant-pagination .ant-pagination-item {
+  background: #121214 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+.ant-pagination .ant-pagination-item a {
+  color: #A1A1AA !important;
+}
+
+.ant-pagination .ant-pagination-item-active {
+  background: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+.ant-pagination .ant-pagination-prev button,
+.ant-pagination .ant-pagination-next button {
+  color: #A1A1AA !important;
+}
+
+/* Modal & Drawer Theme */
+.ant-modal-content, .ant-drawer-content {
+  background-color: #121214 !important;
+  color: #FAFAFA !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
+}
+
+.ant-modal-header, .ant-drawer-header {
+  background-color: #121214 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.ant-modal-title, .ant-drawer-title {
+  color: #FAFAFA !important;
+}
+
+.ant-modal-close-x, .ant-drawer-close {
+  color: #A1A1AA !important;
+}
+
+/* Dropdown Menu */
+.ant-dropdown-menu {
+  background-color: #121214 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 12px !important;
+  padding: 6px !important;
+}
+
+.ant-dropdown-menu-item {
+  color: #E4E4E7 !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+}
+
+.ant-dropdown-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+/* Input Fields */
+.ant-input, .ant-input-affix-wrapper, .ant-input-password {
+  background-color: #09090B !important;
+  color: #FAFAFA !important;
+  /* border: 1px solid rgba(255, 255, 255, 0.12) !important; */
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-input:focus, .ant-input-affix-wrapper-focused {
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 0 1px #FFFFFF !important;
+}
+
+.ant-input::placeholder {
+  color: #71717A !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ant-table {
+    font-size: 12px !important;
   }
 }

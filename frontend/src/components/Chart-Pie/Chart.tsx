@@ -39,20 +39,20 @@ const ChartANalyse: React.FC<CommonProblemProps> = ({ datas }) => {
     const [ModalOpen, setModalOpen] = useState<boolean>();
 
     if (!datas || datas.length === 0) {
-        return <p className="text-[#F8FAFC]/50 text-center py-6">No data available</p>;
+        return <p className="text-slate-500 text-center py-8">No visual data available.</p>;
     }
 
     const chartData = {
         labels: datas.map((item) => item.name),
         datasets: [
             {
-                label: 'No. of Problems',
-                data: datas.map((item) => item.numberOfProblems),
-                backgroundColor: 'rgba(59, 130, 246, 0.75)',
-                borderColor: '#3B82F6',
+                label: 'Identified Issues Count',
+                data: datas.map((item) => item.numberOfProblems || (item.problems ? item.problems.length : 1)),
+                backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                borderColor: '#FFFFFF',
                 borderWidth: 1.5,
                 borderRadius: 6,
-                hoverBackgroundColor: '#2563EB',
+                hoverBackgroundColor: '#FFFFFF',
             },
         ],
     };
@@ -64,30 +64,33 @@ const ChartANalyse: React.FC<CommonProblemProps> = ({ datas }) => {
                 display: true,
                 position: 'top' as const,
                 labels: {
-                    color: '#F8FAFC',
+                    color: '#A1A1AA',
                     font: {
-                        family: 'Inter, sans-serif'
+                        family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        size: 12
                     }
                 }
             },
             tooltip: {
                 enabled: true,
-                backgroundColor: '#131B2E',
-                titleColor: '#F8FAFC',
-                bodyColor: '#F8FAFC',
-                borderColor: 'rgba(59, 130, 246, 0.3)',
+                backgroundColor: '#18181B',
+                titleColor: '#FAFAFA',
+                bodyColor: '#E4E4E7',
+                borderColor: 'rgba(255, 255, 255, 0.12)',
                 borderWidth: 1,
+                padding: 12,
+                cornerRadius: 8,
             },
         },
         scales: {
             x: {
-                ticks: { color: '#F8FAFC' },
-                grid: { color: 'rgba(248, 250, 252, 0.08)' },
+                ticks: { color: '#A1A1AA', maxRotation: 45, minRotation: 20 },
+                grid: { color: 'rgba(255, 255, 255, 0.04)' },
             },
             y: {
                 beginAtZero: true,
-                ticks: { color: '#F8FAFC', stepSize: 1 },
-                grid: { color: 'rgba(248, 250, 252, 0.08)' },
+                ticks: { color: '#A1A1AA', stepSize: 1 },
+                grid: { color: 'rgba(255, 255, 255, 0.04)' },
             },
         },
         onClick: (_event: ChartEvent, elements: any) => {
@@ -100,25 +103,33 @@ const ChartANalyse: React.FC<CommonProblemProps> = ({ datas }) => {
         }
     };
 
-    const onClose = () => {
-        setModalOpen(false);
-    };
-
     return (
-        <div className="space-y-4">
-            <h3 className="text-center font-semibold text-[#F8FAFC] text-base sm:text-lg">
-                Citizen Problem Count Analysis
-            </h3>
-            <div className="p-2 sm:p-4 bg-[#090D16] border border-[#3B82F6]/20 rounded-xl">
+        <div className="space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+                <div>
+                    <h3 className="text-base sm:text-lg font-bold text-white">
+                        Citizen Petition Frequency Matrix
+                    </h3>
+                    <p className="text-xs text-zinc-400">
+                        Click on any citizen's bar column to inspect their tag distribution breakdown
+                    </p>
+                </div>
+            </div>
+
+            <div className="p-4 bg-[#09090B] border border-white/[0.08] rounded-2xl shadow-inner">
                 <Bar data={chartData} options={chartOptions} />
             </div>
 
             <Modal
-                title={<span className="text-[#F8FAFC] font-semibold text-lg">Detailed Tag Distribution</span>}
+                title={
+                    <div className="flex items-center gap-2">
+                        <span className="text-white font-bold text-base">Sector Analysis: {pieData?.name}</span>
+                    </div>
+                }
                 open={ModalOpen}
-                onCancel={onClose}
+                onCancel={() => setModalOpen(false)}
                 footer={null}
-                className="!bg-[#131B2E]"
+                width={480}
             >
                 <Pie_Comp data={pieData} />
             </Modal>

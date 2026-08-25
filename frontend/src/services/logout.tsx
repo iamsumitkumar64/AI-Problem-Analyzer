@@ -1,20 +1,29 @@
 import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import backend_url from '../Libs/env';
 
 const LogOut = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const logout = async () => {
+    const performLogout = async () => {
       try {
         await axios.post(`${backend_url}/logout`, {}, { withCredentials: true });
       } catch (err) {
-        console.error('Logout failed:', err);
+        try {
+          await axios.get(`${backend_url}/logout`, { withCredentials: true });
+        } catch (e) {
+          console.error('Logout error:', e);
+        }
+      } finally {
+        navigate('/login', { replace: true });
       }
     };
-    logout();
-  }, []);
-  return <Navigate to="/login" replace />;
+    performLogout();
+  }, [navigate]);
+
+  return <></>;
 };
 
 export default LogOut;

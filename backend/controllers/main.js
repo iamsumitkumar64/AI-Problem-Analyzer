@@ -46,14 +46,19 @@ export const loginUser = async (req, res) => {
 
 // POST /logout or GET /logout - Destroy session (200 OK)
 export const logoutUser = (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Logout failed:', err);
-            return res.status(500).json({ message: 'Logout failed' });
-        }
-        res.clearCookie('connect.sid');
+    if (req.session) {
+        req.session.destroy(err => {
+            if (err) {
+                console.error('Logout error:', err);
+                return res.status(500).json({ message: 'Logout error' });
+            }
+            res.clearCookie('connect.sid', { path: '/' });
+            return res.status(200).json({ message: 'Logged out successfully' });
+        });
+    } else {
+        res.clearCookie('connect.sid', { path: '/' });
         return res.status(200).json({ message: 'Logged out successfully' });
-    });
+    }
 };
 
 // POST /register - Register new account (201 Created)

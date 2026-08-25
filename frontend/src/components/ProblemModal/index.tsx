@@ -1,5 +1,6 @@
 import { Modal } from 'antd';
 import { useState, useEffect } from 'react';
+import { UserOutlined, TagsOutlined, EnvironmentOutlined } from '@ant-design/icons';
 
 interface ProblemInterface {
     tags: string[];
@@ -33,61 +34,77 @@ const ProblemModal: React.FC<TagProps> = ({ filter, data }) => {
 
     const filteredData = data?.filter(item => {
         if (typeof filter === 'number' || !isNaN(Number(filter))) {
-            return item.wardNo === String(filter);
+            return String(item.wardNo) === String(filter);
         } else if (typeof filter === 'string') {
-            return item.problems.some(problem => problem.tags.includes(filter));
+            return (item.problems || []).some(problem => (problem.tags || []).includes(filter));
         }
         return false;
     });
 
-    const onClose = () => {
-        setModalOpen(false);
-    };
-
     return (
         <Modal
             title={
-                <span className="text-[#F8FAFC] font-semibold text-lg">
-                    {typeof filter === 'number' || !isNaN(Number(filter))
-                        ? `Problems in Ward "${filter}"`
-                        : `Problems tagged with "${filter}"`}
-                </span>
+                <div className="flex items-center gap-2">
+                    {typeof filter === 'number' || !isNaN(Number(filter)) ? (
+                        <EnvironmentOutlined className="text-zinc-400" />
+                    ) : (
+                        <TagsOutlined className="text-zinc-400" />
+                    )}
+                    <span className="text-white font-bold text-base">
+                        {typeof filter === 'number' || !isNaN(Number(filter))
+                            ? `Ward ${filter} Petitions`
+                            : `Sector: #${filter}`}
+                    </span>
+                </div>
             }
             open={ModalOpen}
-            onCancel={onClose}
+            onCancel={() => setModalOpen(false)}
             footer={null}
-            className="!bg-[#131B2E]"
+            width={580}
+            style={{ maxWidth: '95vw', top: 30 }}
         >
-            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+            <div className="space-y-3.5 max-h-[62vh] overflow-y-auto pr-1">
                 {filteredData && filteredData.length > 0 ? (
                     filteredData.map((item) => (
-                        <div key={item._id} className="p-4 bg-[#090D16] border border-[#3B82F6]/20 rounded-xl space-y-2">
-                            <div className="flex items-center justify-between border-b border-[#3B82F6]/15 pb-2">
-                                <h4 className="font-bold text-[#F8FAFC] text-sm">{item.name}</h4>
-                                <span className="text-xs px-2 py-0.5 rounded-md bg-[#3B82F6]/10 text-[#3B82F6] font-medium border border-[#3B82F6]/25">
+                        <div key={item._id} className="p-4 bg-[#09090B] border border-white/[0.08] rounded-xl space-y-2.5 shadow-sm">
+                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
+                                <span className="font-bold text-white text-sm flex items-center gap-1.5">
+                                    <UserOutlined className="text-zinc-400 text-xs" />
+                                    {item.name}
+                                </span>
+                                <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-200 font-mono border border-zinc-700">
                                     Ward {item.wardNo}
                                 </span>
                             </div>
-                            <p className="text-xs text-[#F8FAFC]/60">
-                                <strong>Mobile:</strong> {item.mobileNo}
+                            <p className="text-[11px] text-zinc-500 font-mono">
+                                Contact: {item.mobileNo ? `+91 ${item.mobileNo}` : 'Unlisted'}
                             </p>
-                            <ul className="space-y-2 pt-2">
+                            <div className="space-y-2 pt-1">
                                 {(typeof filter === 'string' && isNaN(Number(filter))
-                                    ? item.problems.filter(problem => problem.tags.includes(filter))
+                                    ? item.problems.filter(problem => (problem.tags || []).includes(filter))
                                     : item.problems
                                 ).map(problem => (
-                                    <li key={problem._id} className="text-xs sm:text-sm text-[#F8FAFC] bg-[#131B2E] p-2.5 rounded-lg border border-[#3B82F6]/10">
-                                        <span className="text-[#3B82F6] font-bold mr-1.5">▶</span>
-                                        <strong>{problem.english}</strong> 
-                                        {problem.hindi && <span className="text-[#F8FAFC]/70 ml-1">({problem.hindi})</span>}
-                                    </li>
+                                    <div key={problem._id} className="p-2.5 rounded-lg bg-[#121214] border border-white/[0.04] text-xs space-y-1">
+                                        {problem.english && (
+                                            <p className="text-zinc-200">
+                                                <span className="text-white font-bold mr-1">EN:</span>
+                                                {problem.english}
+                                            </p>
+                                        )}
+                                        {problem.hindi && (
+                                            <p className="text-zinc-400">
+                                                <span className="text-zinc-300 font-bold mr-1">HI:</span>
+                                                {problem.hindi}
+                                            </p>
+                                        )}
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     ))
                 ) : (
-                    <p className="text-center text-[#F8FAFC]/50 py-4 text-sm">
-                        No problems found for this {typeof filter === 'number' ? 'ward' : 'tag'}.
+                    <p className="text-center text-zinc-500 py-6 text-sm">
+                        No matching grievances found for this filter.
                     </p>
                 )}
             </div>

@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { message } from "antd";
-import { RightOutlined, UserOutlined, PhoneOutlined, NumberOutlined, AlertOutlined } from "@ant-design/icons";
+import { 
+    RightOutlined, 
+    UserOutlined, 
+    PhoneOutlined, 
+    EnvironmentOutlined, 
+    FileTextOutlined
+} from "@ant-design/icons";
 import axios from "axios";
 import MainAreaLayout from "../main_area_layout";
 import backend_url from "../../Libs/env";
@@ -28,137 +34,158 @@ const IndividualReportPage = () => {
     const [data, setData] = useState<DataInterface | null>(null);
     const navigate = useNavigate();
 
+    const pathSegments = window.location.pathname.split("/");
+    const reqId = pathSegments[3];
+    const itemId = pathSegments[5];
+
     useEffect(() => {
         const fetchReport = async () => {
             setIsLoading(true);
             try {
-                const pathSegments = window.location.pathname.split("/");
-                const reqId = pathSegments[3];
-                const itemId = pathSegments[5];
                 const res = await axios.get(`${backend_url}/reports/${reqId}/items/${itemId}`, {
                     withCredentials: true
                 });
                 setData(res.data?.data?.reportData?.[0] || null);
             } catch (err) {
                 console.error("Fetch error:", err);
-                messageApi.error("Failed to fetch report data");
+                messageApi.error("Failed to fetch citizen record");
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchReport();
-    }, []);
-
-    const redirectRequests = () => {
-        navigate('/main/requests');
-    };
-
-    const redirectReport = () => {
-        const pathsegments = window.location.pathname.split('/');
-        const req_id = pathsegments[pathsegments.length - 3];
-        navigate(`/main/report/${req_id}`);
-    };
+    }, [reqId, itemId]);
 
     return (
         <>
             {contextHolder}
             <MainAreaLayout
-                title="Individual Citizen Report"
-                description="Detailed AI analysis breakdown"
+                title="Citizen Petition Record"
+                description={`Verification ID: ${itemId} • Detailed bilingual AI transcription`}
                 loading={isLoading}
             >
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-6 text-[#F8FAFC]/60">
-                    <span onClick={redirectRequests} className="cursor-pointer hover:text-[#3B82F6] transition-colors">
+                <div className="flex items-center gap-2 text-xs font-medium mb-6 text-zinc-400">
+                    <span onClick={() => navigate('/main/requests')} className="cursor-pointer hover:text-white transition-colors">
                         Requests
                     </span>
-                    <RightOutlined className="text-[10px]" />
-                    <span onClick={redirectReport} className="cursor-pointer hover:text-[#3B82F6] transition-colors">
-                        Report Overview
+                    <RightOutlined className="text-[9px] text-zinc-600" />
+                    <span onClick={() => navigate(`/main/report/${reqId}`)} className="cursor-pointer hover:text-white transition-colors">
+                        Grievances Overview
                     </span>
-                    <RightOutlined className="text-[10px]" />
-                    <span className="text-[#3B82F6] font-semibold">Citizen Record</span>
+                    <RightOutlined className="text-[9px] text-zinc-600" />
+                    <span className="text-zinc-200 font-semibold">{data?.name || 'Citizen Record'}</span>
                 </div>
 
                 {!data ? (
-                    <div className="p-8 text-center text-[#F8FAFC]/50 bg-[#131B2E] rounded-xl border border-[#3B82F6]/20">
-                        No report data found.
+                    <div className="p-12 text-center text-zinc-500 bg-[#121214] rounded-2xl border border-white/[0.08]">
+                        Citizen record not found.
                     </div>
                 ) : (
                     <div className="space-y-6">
                         {/* Summary Metadata Cards Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="p-4 bg-[#131B2E] border border-[#3B82F6]/20 rounded-xl shadow-lg flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/10 text-[#3B82F6] flex items-center justify-center text-lg">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg flex-shrink-0">
                                     <UserOutlined />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xs text-[#F8FAFC]/50">Citizen Name</p>
-                                    <p className="text-sm font-semibold text-[#F8FAFC] truncate">{data.name}</p>
+                                    <p className="text-[11px] text-zinc-500">Citizen Name</p>
+                                    <p className="text-sm font-bold text-white truncate">{data.name}</p>
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-[#131B2E] border border-[#3B82F6]/20 rounded-xl shadow-lg flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/10 text-[#3B82F6] flex items-center justify-center text-lg">
+                            <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg flex-shrink-0">
                                     <PhoneOutlined />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xs text-[#F8FAFC]/50">Mobile Contact</p>
-                                    <p className="text-sm font-semibold text-[#F8FAFC] truncate">{data.mobileNo}</p>
+                                    <p className="text-[11px] text-zinc-500">Contact Number</p>
+                                    <p className="text-sm font-bold text-zinc-200 font-mono truncate">
+                                        {data.mobileNo ? `+91 ${data.mobileNo}` : 'Unlisted'}
+                                    </p>
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-[#131B2E] border border-[#3B82F6]/20 rounded-xl shadow-lg flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/10 text-[#3B82F6] flex items-center justify-center text-lg">
-                                    <NumberOutlined />
+                            <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg flex-shrink-0">
+                                    <EnvironmentOutlined />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xs text-[#F8FAFC]/50">Ward Number</p>
-                                    <p className="text-sm font-semibold text-[#F8FAFC] truncate">Ward {data.wardNo}</p>
+                                    <p className="text-[11px] text-zinc-500">Jurisdiction</p>
+                                    <p className="text-sm font-bold text-emerald-400 truncate">Ward {data.wardNo}</p>
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-[#131B2E] border border-[#3B82F6]/20 rounded-xl shadow-lg flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/10 text-[#3B82F6] flex items-center justify-center text-lg">
-                                    <AlertOutlined />
+                            <div className="p-4 bg-[#121214] border border-white/[0.08] rounded-2xl shadow-lg flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-zinc-800 text-white flex items-center justify-center text-lg flex-shrink-0">
+                                    <FileTextOutlined />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xs text-[#F8FAFC]/50">Total Issues</p>
-                                    <p className="text-sm font-semibold text-[#3B82F6]">{data.numberOfProblems} Reported</p>
+                                    <p className="text-[11px] text-zinc-500">Total Grievances</p>
+                                    <p className="text-sm font-bold text-white">
+                                        {data.numberOfProblems || (data.problems ? data.problems.length : 1)} Issues
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Reported Problems List */}
-                        <div className="bg-[#131B2E] border border-[#3B82F6]/20 rounded-xl p-5 sm:p-6 shadow-xl">
-                            <h3 className="text-lg font-bold text-[#F8FAFC] mb-4 pb-3 border-b border-[#3B82F6]/15 flex items-center gap-2">
-                                📋 Categorized Problems ({data.problems.length})
-                            </h3>
+                        {/* Reported Problems Breakdown */}
+                        <div className="bg-[#121214] border border-white/[0.08] rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+                            <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                                    Extracted Grievance Petitions ({data.problems?.length || 0})
+                                </h3>
+                                <span className="text-xs font-mono text-zinc-500">
+                                    Source: Scanned Petition OCR
+                                </span>
+                            </div>
+
                             <div className="space-y-4">
-                                {data.problems.map((prob, idx) => (
+                                {(data.problems || []).map((prob, idx) => (
                                     <div 
                                         key={prob._id || idx} 
-                                        className="p-4 bg-[#090D16] border border-[#3B82F6]/20 rounded-xl space-y-3"
+                                        className="p-5 bg-[#09090B] border border-white/[0.08] rounded-2xl space-y-3.5 shadow-sm"
                                     >
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <span className="text-xs font-semibold text-[#F8FAFC]/60">Tags:</span>
-                                            {prob.tags.map((tag, tIdx) => (
-                                                <span 
-                                                    key={tIdx} 
-                                                    className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30"
-                                                >
-                                                    {tag}
+                                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/[0.04]">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs font-bold text-zinc-300 font-mono">
+                                                    Issue #{idx + 1}
                                                 </span>
-                                            ))}
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {prob.tags.map((tag, tIdx) => (
+                                                    <span 
+                                                        key={tIdx} 
+                                                        className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-zinc-800 text-zinc-300 border border-zinc-700 font-mono"
+                                                    >
+                                                        #{tag}
+                                                    </span>
+                                                ))}
+                                            </div>
                                         </div>
-                                        <div className="space-y-1.5 text-xs sm:text-sm">
-                                            <p className="text-[#F8FAFC]">
-                                                <strong className="text-[#3B82F6]">English:</strong> {prob.english}
-                                            </p>
-                                            <p className="text-[#F8FAFC]/90">
-                                                <strong className="text-[#3B82F6]">Hindi:</strong> {prob.hindi}
-                                            </p>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {/* English Translation */}
+                                            <div className="p-3.5 bg-[#121214] rounded-xl border border-white/[0.04] space-y-1">
+                                                <span className="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
+                                                    AI English Summary
+                                                </span>
+                                                <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                                                    {prob.english || 'N/A'}
+                                                </p>
+                                            </div>
+
+                                            {/* Original Hindi */}
+                                            <div className="p-3.5 bg-[#121214] rounded-xl border border-white/[0.04] space-y-1">
+                                                <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1">
+                                                    मूल हिंदी शिकायत (Original Hindi)
+                                                </span>
+                                                <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
+                                                    {prob.hindi || 'N/A'}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
