@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/upload", express.static(uploadsDir));
 app.use(cors({
   origin: frontend_url,
-  method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 app.use(session({
@@ -53,9 +53,9 @@ app.use(session({
 }));
 
 app.use('/', mainRouter);
-app.use('/user', isSessionAuth, userRouter);
-app.use('/report', isSessionAuth, reportRouter);
-app.use('/request', isSessionAuth, requestRouter);
+app.use('/users', isSessionAuth, userRouter);
+app.use('/reports', isSessionAuth, reportRouter);
+app.use('/requests', isSessionAuth, requestRouter);
 
 server.listen(PORT, () => {
   console.log(`Connected to Server => http://localhost:${PORT}`);

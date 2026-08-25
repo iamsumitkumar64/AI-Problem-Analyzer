@@ -19,78 +19,99 @@ const RequestsPage_comp = () => {
     const [iframeFile, setIframeFile] = useState<String>('');
     const navigate = useNavigate();
 
-    const actionMenu = (item: any) => (
-        <Menu className="!bg-[#131B2E] !border !border-[#3B82F6]/20 !p-1 rounded-xl shadow-xl">
-            <Menu.Item 
-                key="preview" 
-                onClick={() => handlepreview(item.id)} 
-                className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
-                icon={<EyeOutlined className="text-[#3B82F6]" />}
-            >
-                Preview PDF
-            </Menu.Item>
-            {!item.rawDocuments ? (
+    const actionMenu = (item: any) => {
+        const isComplete = item.rawStatus === 'Complete' || (item.rawDocuments && item.rawDocuments > 0);
+        return (
+            <Menu className="!bg-[#131B2E] !border !border-[#3B82F6]/20 !p-1 rounded-xl shadow-xl">
                 <Menu.Item 
-                    key="report" 
-                    onClick={() => handlereport(item.id)} 
+                    key="preview" 
+                    onClick={() => handlepreview(item.id)} 
                     className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
-                    icon={<FileTextOutlined className="text-[#3B82F6]" />}
+                    icon={<EyeOutlined className="text-[#3B82F6]" />}
                 >
-                    Generate Report
+                    Preview PDF
                 </Menu.Item>
-            ) : (
+                {isComplete ? (
+                    <>
+                        <Menu.Item 
+                            key="analyse" 
+                            onClick={() => handleAnalyse(item.id)} 
+                            className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg font-medium"
+                            icon={<LineChartOutlined className="text-[#3B82F6]" />}
+                        >
+                            Analyse Report
+                        </Menu.Item>
+                        <Menu.Item 
+                            key="viewDocs" 
+                            onClick={() => navigate(`/main/report/${item.id}`)} 
+                            className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
+                            icon={<FileTextOutlined className="text-[#3B82F6]" />}
+                        >
+                            View Documents
+                        </Menu.Item>
+                    </>
+                ) : (
+                    <Menu.Item 
+                        key="report" 
+                        onClick={() => handlereport(item.id)} 
+                        className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
+                        icon={<FileTextOutlined className="text-[#3B82F6]" />}
+                    >
+                        Generate Report
+                    </Menu.Item>
+                )}
                 <Menu.Item 
-                    key="analyse" 
-                    onClick={() => handleAnalyse(item.id)} 
-                    className="!text-[#F8FAFC] hover:!bg-[#3B82F6]/20 !rounded-lg"
-                    icon={<LineChartOutlined className="text-[#3B82F6]" />}
+                    key="delete" 
+                    onClick={() => handleDelete(item.id)} 
+                    className="!text-[#F8FAFC] hover:!bg-red-500/20 !rounded-lg"
+                    icon={<DeleteOutlined className="text-red-400" />}
                 >
-                    Analyse Report
+                    Delete
                 </Menu.Item>
-            )}
-            <Menu.Item 
-                key="delete" 
-                onClick={() => handleDelete(item.id)} 
-                className="!text-[#F8FAFC] hover:!bg-red-500/20 !rounded-lg"
-                icon={<DeleteOutlined className="text-red-400" />}
-            >
-                Delete
-            </Menu.Item>
-        </Menu>
-    );
+            </Menu>
+        );
+    };
 
     const fetch = async () => {
         setIsLoading(true);
         try {
-            const ans = await axios.get(`${backend_url}/request`, { withCredentials: true });
-            const requests = ans.data.data.map((item: any) => ({
-                ...item,
-                rawDocuments: item.documents,
-                documents: (
-                    <Link 
-                        to={`/main/report/${item.id}`} 
-                        className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30 hover:bg-[#3B82F6]/20 transition-all whitespace-nowrap"
-                    >
-                        📄 {item.documents || 0} Docs
-                    </Link>
-                ),
-                status: (
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${
-                        item.status === 'Complete' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                        item.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                        'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20'
-                    }`}>
-                        {item.status || 'Created'}
-                    </span>
-                ),
-                action: (
-                    <Dropdown overlay={actionMenu(item)} trigger={['click']}>
-                        <Button className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30 hover:!border-[#3B82F6] text-xs h-8 px-3 rounded-lg flex items-center gap-1 whitespace-nowrap">
-                            Actions <DownOutlined className="text-[10px]" />
-                        </Button>
-                    </Dropdown>
-                ),
-            }));
+            const ans = await axios.get(`${backend_url}/requests`, { withCredentials: true });
+            const rawList = ans.data?.data || [];
+            const requests = rawList.map((item: any) => {
+                const itemStatus = item.status || 'Created';
+                const itemDocs = item.documents || 0;
+                const rawItem = { ...item, rawStatus: itemStatus, rawDocuments: itemDocs };
+
+                return {
+                    ...item,
+                    rawStatus: itemStatus,
+                    rawDocuments: itemDocs,
+                    documents: (
+                        <Link 
+                            to={`/main/report/${item.id}`} 
+                            className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30 hover:bg-[#3B82F6]/20 transition-all whitespace-nowrap"
+                        >
+                            📄 {itemDocs} Docs
+                        </Link>
+                    ),
+                    status: (
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${
+                            itemStatus === 'Complete' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                            itemStatus === 'Pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                            'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20'
+                        }`}>
+                            {itemStatus}
+                        </span>
+                    ),
+                    action: (
+                        <Dropdown overlay={actionMenu(rawItem)} trigger={['click']}>
+                            <Button className="!bg-[#090D16] !text-[#F8FAFC] !border-[#3B82F6]/30 hover:!border-[#3B82F6] text-xs h-8 px-3 rounded-lg flex items-center gap-1 whitespace-nowrap">
+                                Actions <DownOutlined className="text-[10px]" />
+                            </Button>
+                        </Dropdown>
+                    ),
+                };
+            });
             setIsdata(requests);
         } catch (err) {
             console.log(err);
@@ -156,12 +177,12 @@ const RequestsPage_comp = () => {
     ];
 
     const handleDelete = async (id: any) => {
-        await axios.delete(`${backend_url}/request/${id}`, { withCredentials: true });
+        await axios.delete(`${backend_url}/requests/${id}`, { withCredentials: true });
         fetch();
     };
 
     const handlepreview = async (id: any) => {
-        const ans = await axios.get(`${backend_url}/request/preview/${id}`, { withCredentials: true });
+        const ans = await axios.get(`${backend_url}/requests/${id}/preview`, { withCredentials: true });
         setIframeFile(ans.data.file_address);
         setIsFrame(true);
     };
@@ -169,8 +190,8 @@ const RequestsPage_comp = () => {
     const handlereport = async (id: any) => {
         setIsLoading(true);
         try {
-            const ans = await axios.get(`${backend_url}/request/report/${id}`, { withCredentials: true });
-            if (ans.status === 200) {
+            const ans = await axios.get(`${backend_url}/requests/${id}/report`, { withCredentials: true });
+            if (ans.status === 200 || ans.status === 202) {
                 await fetch();
                 messageApi.success('Report Generation Started');
             } else {
@@ -218,7 +239,7 @@ const RequestsPage_comp = () => {
             form_data.append('title', values.title);
             form_data.append('description', values.description);
             form_data.append('pdffile', values.pdffile[0].originFileObj);
-            await axios.post(`${backend_url}/request`, form_data, { withCredentials: true });
+            await axios.post(`${backend_url}/requests`, form_data, { withCredentials: true });
             form.resetFields();
             setModalOpen(false);
             fetch();

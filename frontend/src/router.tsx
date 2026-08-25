@@ -23,6 +23,8 @@ const AllRoutes = () => {
                     <Route path="requests" element={<RequestsPage />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="anlayse/:id" element={<ViewAnalyes />} />
+                    <Route path="analyse/:id" element={<ViewAnalyes />} />
+                    <Route path="analyze/:id" element={<ViewAnalyes />} />
                     <Route path="report/:id" >
                         <Route index element={<ReportPage />} />
                         <Route path="viewreport/:id" element={<ViewReport />} />

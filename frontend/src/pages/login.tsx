@@ -12,13 +12,13 @@ const LoginSignup: React.FC = () => {
 
     const handleLogin = async (values: any) => {
         try {
-            let ans = await axios.post(`${backend_url}/login`, values, { withCredentials: true });
-            if (ans?.data?.message === 'Login Success') {
-                messageApi.loading(ans.data.message);
-                setTimeout(() => navigate('/main'), 1000);
+            const ans = await axios.post(`${backend_url}/login`, values, { withCredentials: true });
+            if (ans?.status === 200 || ans?.data?.message === 'Login Success') {
+                messageApi.success('Login Successful');
+                setTimeout(() => navigate('/main'), 800);
             }
         } catch (err: any) {
-            console.log(err);
+            console.error('Login error:', err);
             messageApi.error(err.response?.data?.message || 'Login failed');
         }
     };

@@ -22,7 +22,7 @@ interface DataInterface {
     _id: string;
 }
 
-const OneReportPage = () => {
+const IndividualReportPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
     const [data, setData] = useState<DataInterface | null>(null);
@@ -32,11 +32,13 @@ const OneReportPage = () => {
         const fetchReport = async () => {
             setIsLoading(true);
             try {
-                const reqId = window.location.pathname.split("/")[5];
-                const res = await axios.get(`${backend_url}/report/Onereport/${reqId}`, {
+                const pathSegments = window.location.pathname.split("/");
+                const reqId = pathSegments[3];
+                const itemId = pathSegments[5];
+                const res = await axios.get(`${backend_url}/reports/${reqId}/items/${itemId}`, {
                     withCredentials: true
                 });
-                setData(res.data.data.reportData[0]);
+                setData(res.data?.data?.reportData?.[0] || null);
             } catch (err) {
                 console.error("Fetch error:", err);
                 messageApi.error("Failed to fetch report data");
@@ -169,4 +171,4 @@ const OneReportPage = () => {
     );
 };
 
-export default OneReportPage;
+export default IndividualReportPage;

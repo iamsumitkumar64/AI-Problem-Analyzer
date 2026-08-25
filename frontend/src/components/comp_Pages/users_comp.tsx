@@ -18,36 +18,40 @@ const UsersPage_comp = () => {
     const fetchusers = async () => {
         setisLoading(true);
         try {
-            let response = await axios.get(`${backend_url}/user`, {
+            const response = await axios.get(`${backend_url}/users`, {
                 withCredentials: true
             });
-            if (!response) {
+            if (!response || !response.data?.users) {
                 messageApi.error('No users Exist');
                 return;
             }
-            const users = response.data.users.map((item: any) => ({
-                ...item,
-                action: (
-                    <div className="flex items-center gap-2 whitespace-nowrap">
-                        <Button 
-                            type="text" 
-                            icon={<EditOutlined className="text-[#3B82F6]" />}
-                            onClick={() => handleEdit(item)}
-                            className="!bg-[#3B82F6]/10 hover:!bg-[#3B82F6]/20 !text-[#3B82F6] h-8 text-xs font-medium rounded-lg"
-                        >
-                            Edit
-                        </Button>
-                        <Button 
-                            type="text" 
-                            icon={<DeleteOutlined className="text-red-400" />}
-                            onClick={() => handleDelete(item.id)}
-                            className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 h-8 text-xs font-medium rounded-lg"
-                        >
-                            Delete
-                        </Button>
-                    </div>
-                ),
-            }));
+            const users = response.data.users.map((item: any) => {
+                const userId = item.id || item._id;
+                return {
+                    ...item,
+                    id: userId,
+                    action: (
+                        <div className="flex items-center gap-2 whitespace-nowrap">
+                            <Button 
+                                type="text" 
+                                icon={<EditOutlined className="text-[#3B82F6]" />}
+                                onClick={() => handleEdit(item)}
+                                className="!bg-[#3B82F6]/10 hover:!bg-[#3B82F6]/20 !text-[#3B82F6] h-8 text-xs font-medium rounded-lg"
+                            >
+                                Edit
+                            </Button>
+                            <Button 
+                                type="text" 
+                                icon={<DeleteOutlined className="text-red-400" />}
+                                onClick={() => handleDelete(userId)}
+                                className="!bg-red-500/10 hover:!bg-red-500/20 !text-red-400 h-8 text-xs font-medium rounded-lg"
+                            >
+                                Delete
+                            </Button>
+                        </div>
+                    ),
+                };
+            });
             setUsersData(users);
         } catch (err) {
             console.log(err);
@@ -83,16 +87,21 @@ const UsersPage_comp = () => {
             username: userToEdit.username,
             email: userToEdit.email,
         });
-        setEditUserId(userToEdit.id);
+        setEditUserId(userToEdit.id || userToEdit._id);
         setDrawerOpen(true);
     };
 
     const handleDelete = async (id: any) => {
-        await axios.delete(`${backend_url}/user`, {
-            headers: { id },
-            withCredentials: true
-        });
-        fetchusers();
+        try {
+            await axios.delete(`${backend_url}/users/${id}`, {
+                withCredentials: true
+            });
+            messageApi.success('User Deleted Successfully');
+            fetchusers();
+        } catch (err: any) {
+            console.error('Delete failed:', err);
+            messageApi.error(err?.response?.data?.message || 'Failed to delete user');
+        }
     };
 
     const coldata = [
@@ -142,13 +151,12 @@ const UsersPage_comp = () => {
         try {
             const values = await form.validateFields();
             if (isEdit && editUserId) {
-                const id = editUserId;
-                await axios.put(`${backend_url}/user`, { headers: values, id }, {
+                await axios.put(`${backend_url}/users/${editUserId}`, values, {
                     withCredentials: true
                 });
                 messageApi.success('User Updated Successfully');
             } else {
-                await axios.post(`${backend_url}/user`, values, {
+                await axios.post(`${backend_url}/users`, values, {
                     withCredentials: true
                 });
                 messageApi.success('User Created Successfully');

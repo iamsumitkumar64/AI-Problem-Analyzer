@@ -33,10 +33,10 @@ const ViewAnalyes_comp = () => {
         setIsLoading(true);
         try {
             const reqId = window.location.pathname.split('/')[3];
-            const ans = await axios.get(`${backend_url}/report/${reqId}`, {
+            const ans = await axios.get(`${backend_url}/reports/${reqId}`, {
                 withCredentials: true
             });
-            setIsData(ans.data.data.reportData);
+            setIsData(ans.data?.data?.reportData || []);
         } catch (err) {
             console.log(err);
         } finally {

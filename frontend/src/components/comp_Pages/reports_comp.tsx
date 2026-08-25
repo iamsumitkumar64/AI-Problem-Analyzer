@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, message, Tooltip } from "antd";
-import { EyeOutlined, RightOutlined } from "@ant-design/icons";
+import { EyeOutlined, RightOutlined, LineChartOutlined } from "@ant-design/icons";
 import axios from "axios";
 import CustomTable from "../customtable/index.tsx";
 import MainAreaLayout from "../main_area_layout";
@@ -45,9 +45,10 @@ const ReportsPage_comp = () => {
             const pathSegments = window.location.pathname.split('/');
             const req_id = pathSegments[pathSegments.length - 1];
             const fetch = async () => {
-                const ans = await axios.get(`${backend_url}/report/${req_id}`, { withCredentials: true });
-                const data = ans.data.data.reportData.map((item: rawData) => {
-                    const allTags = [...new Set(item.problems.flatMap(prob => prob.tags))];
+                const ans = await axios.get(`${backend_url}/reports/${req_id}`, { withCredentials: true });
+                const reportItems = ans.data?.data?.reportData || [];
+                const data = reportItems.map((item: rawData) => {
+                    const allTags = [...new Set((item.problems || []).flatMap(prob => prob.tags || []))];
                     return {
                         ...item,
                         rawTags: allTags,
@@ -75,7 +76,7 @@ const ReportsPage_comp = () => {
                     };
                 });
                 setIsdata(data);
-            }
+            };
             fetch();
         } catch (err) {
             console.log(err);
@@ -83,7 +84,7 @@ const ReportsPage_comp = () => {
         finally {
             setTimeout(() => {
                 setIsLoading(false);
-            }, 500)
+            }, 500);
         }
     }, []);
 
@@ -171,7 +172,21 @@ const ReportsPage_comp = () => {
 
     const redirectRequests = () => {
         navigate('/main/requests');
-    }
+    };
+
+    const pathSegments = window.location.pathname.split('/');
+    const req_id = pathSegments[pathSegments.length - 1];
+
+    const analyseButton = (
+        <Button
+            type="primary"
+            icon={<LineChartOutlined />}
+            onClick={() => navigate(`/main/analyse/${req_id}`)}
+            className="!bg-[#3B82F6] hover:!bg-[#2563EB] !border-none text-xs sm:text-sm font-medium h-9 px-4 rounded-lg shadow-md shadow-[#3B82F6]/20 flex items-center gap-1.5"
+        >
+            Analyse Insights
+        </Button>
+    );
 
     return (
         <>
@@ -180,6 +195,7 @@ const ReportsPage_comp = () => {
                 title="AI Processed Report"
                 description="Extracted details and issue categorization"
                 loading={isLoading}
+                extra={analyseButton}
             >
                 {/* Breadcrumbs */}
                 <div className="flex items-center gap-2 text-xs sm:text-sm font-medium mb-4 text-[#F8FAFC]/60">

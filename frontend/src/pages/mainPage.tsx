@@ -12,7 +12,7 @@ const MainPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const ans = await axios(backend_url, { withCredentials: true });
+                const ans = await axios.get(`${backend_url}/session`, { withCredentials: true });
                 if (ans?.data?.user?.email) {
                     setIsEmail(ans.data.user.email);
                 }

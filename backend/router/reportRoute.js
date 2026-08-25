@@ -1,13 +1,17 @@
 import { Router } from 'express';
 
 import {
-    reportdata,
-    Onereportdata
+    getAllReports,
+    getReportByRequestId,
+    getReportItemById,
+    deleteReport
 } from '../controllers/report.js';
 
 const reportRouter = Router();
 
-reportRouter.get('/:req_id', reportdata);
-reportRouter.get('/Onereport/:req_id', Onereportdata);
+reportRouter.get('/', getAllReports);
+reportRouter.get('/:req_id', getReportByRequestId);
+reportRouter.get('/:req_id/items/:item_id', getReportItemById);
+reportRouter.delete('/:req_id', deleteReport);
 
 export default reportRouter;

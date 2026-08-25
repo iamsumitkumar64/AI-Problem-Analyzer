@@ -1,117 +1,311 @@
 [
     {
-        "name": "राम(Ram)",
-        "mobileNo": 9891017160,
-        "wardNo": 1010,
-        "numberOfProblems": 3,
+        "name": "Ramesh Kumar (रमेश कुमार)",
+        "mobileNo": 9823412001,
+        "wardNo": "1",
+        "numberOfProblems": 2,
         "problems": [
             {
-                "tags": [
-                    "drinking water"
-                ],
-                "english": "Availability of clean and hygienic drinking water in the village is not there.",
-                "hindi": "गाव मे स्वच्छ और सुनहीत पीने के पानी की उपलब्धता नही है"
+                "tags": ["Water", "Drinking Water", "Handpump"],
+                "english": "Main village handpump near primary school has been broken for 2 months, causing severe drinking water scarcity.",
+                "hindi": "प्राथमिक विद्यालय के पास वाला मुख्य हैंडपंप पिछले 2 महीने से खराब है, जिससे पीने के पानी की भारी किल्लत हो रही है।"
             },
             {
-                "tags": [
-                    "water resources"
-                ],
-                "english": "Traditional water sources like borewells, ponds and wells have dried up.",
-                "hindi": "बोरवेल, तालाब और कुएँ जैसे पारंपरिक जल स्त्रोत सूख गए है।"
-            },
-            {
-                "tags": [
-                    "water contamination",
-                    "health"
-                ],
-                "english": "The water available in the village is contaminated and not potable, causing diseases.",
-                "hindi": "गाव मे जो पानी आता है वह गंदा होता है और पिने योग्य नही जिससे बिमारियों का"
+                "tags": ["Electricity", "Street Lights"],
+                "english": "Street light near community hall is non-functional, creating safety issues at night.",
+                "hindi": "सामुदायिक भवन के पास स्ट्रीट लाइट खराब है, जिससे रात में अंधेरा रहता है और सुरक्षा की समस्या होती है।"
             }
         ]
     },
-    [
-        {
-            "name": "नरेन्द्र कुमार (Narendra Kumar)",
-            "mobileNo": 23145,
-            "wardNo": 103,
-            "numberOfProblems": 4,
-            "problems": [
-                {
-                    "tags": [
-                        "Farming",
-                        "Agriculture",
-                        "Irrigation",
-                        "Seeds",
-                        "Fertilizer"
-                    ],
-                    "english": "Farmers are not getting timely supply of seeds, fertilizers, and irrigation.",
-                    "hindi": "किसानों को समय पर खाद, बीज और सिंचाई की सुविधा नहीं मिल पा रही है जिससे फसल का उत्पादन प्रभावित हो रहा है।"
-                },
-                {
-                    "tags": [
-                        "Digital India",
-                        "Mobile Network",
-                        "Connectivity"
-                    ],
-                    "english": "Despite Digital India initiative, many villages still lack adequate mobile network connectivity.",
-                    "hindi": "डिजिटल इंडिया के दौर में भी कई गाँवों में मोबाइल सिग्नल की समस्या है।"
-                },
-                {
-                    "tags": [
-                        "Employment",
-                        "Migration",
-                        "Rural Exodus"
-                    ],
-                    "english": "Lack of employment opportunities in villages is forcing people to migrate to cities.",
-                    "hindi": "गाँवों में रोजगार के अवसरों की कमी के कारण लोग शहरों की ओर पलायन कर रहे हैं।"
-                },
-                {
-                    "tags": [
-                        "Others"
-                    ],
-                    "english": "Unable to identify the problem.",
-                    "hindi": "कुछ भी स्थित दिशा देखने में identify कर पाना मुश्किल है।"
-                }
-            ]
-        }
-    ],
     {
-        "name": "Sunita Sharma (सुनीता शर्मा)",
-        "mobileNo": 9062193658,
-        "wardNo": 34,
-        "numberOfProblems": 4,
+        "name": "Sunita Devi (सुनीता देवी)",
+        "mobileNo": 9823412002,
+        "wardNo": "2",
+        "numberOfProblems": 2,
         "problems": [
             {
-                "tags": [
-                    "Traffic",
-                    "Transportation"
-                ],
-                "english": "Traffic congestion due to increasing number of vehicles.",
-                "hindi": "वाहनों की बढ़ती संख्या के कारण यातायात की भीड़।"
+                "tags": ["Drainage", "Sanitation", "Health"],
+                "english": "Overflowing open drainage line in residential street causing foul smell and heavy mosquito breeding.",
+                "hindi": "आवासीय गली में खुली नाली का गंदा पानी सड़क पर बह रहा है, जिससे बदबू और मच्छरों का प्रकोप बढ़ गया है।"
             },
             {
-                "tags": [
-                    "Pollution",
-                    "Environment"
-                ],
-                "english": "Air pollution caused by industries and vehicle emissions.",
-                "hindi": "उद्योगों और वाहनों के उत्सर्जन से होने वाला वायु प्रदूषण।"
+                "tags": ["Cleanliness", "Waste Management"],
+                "english": "No regular garbage collection in the ward, heaps of waste accumulating near public well.",
+                "hindi": "वार्ड में कचरा उठाने की कोई व्यवस्था नहीं है, सार्वजनिक कुएं के पास कचरे का ढेर लग रहा है।"
+            }
+        ]
+    },
+    {
+        "name": "Rajesh Sharma (राजेश शर्मा)",
+        "mobileNo": 9823412003,
+        "wardNo": "1",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Electricity", "Power Outage", "Transformer"],
+                "english": "Frequent low voltage and transformer failure damaging domestic appliances and tube-well motors.",
+                "hindi": "बिजली का ट्रांसफार्मर बार-बार खराब हो रहा है और कम वोल्टेज से घरेलू उपकरण और ट्यूबवेल मोटर जल रहे हैं।"
+            }
+        ]
+    },
+    {
+        "name": "Kamla Bai (कमला बाई)",
+        "mobileNo": 9823412004,
+        "wardNo": "3",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Health", "Hospital", "Medicines"],
+                "english": "Primary Health Center (PHC) lacks essential medicines for fever and diabetes, doctor is often absent.",
+                "hindi": "प्राथमिक स्वास्थ्य केंद्र में बुखार और शुगर की दवाइयां नहीं मिलती हैं, डॉक्टर भी अक्सर अनुपस्थित रहते हैं।"
             },
             {
-                "tags": [
-                    "Waste Management",
-                    "Sanitation"
-                ],
-                "english": "Lack of proper waste management systems.",
-                "hindi": "उचित अपशिष्ट प्रबंधन प्रणालियों का अभाव।"
+                "tags": ["Health", "Emergency", "Ambulance"],
+                "english": "Emergency 108 ambulance takes over 2 hours to reach the village in critical emergencies.",
+                "hindi": "आपातकालीन 108 एम्बुलेंस को गांव पहुंचने में 2 घंटे से अधिक का समय लगता है।"
+            }
+        ]
+    },
+    {
+        "name": "Mukesh Patel (मुकेश पटेल)",
+        "mobileNo": 9823412005,
+        "wardNo": "4",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Agriculture", "Irrigation", "Canal"],
+                "english": "Irrigation canal sub-branch is heavily silted with weeds, preventing water from reaching downstream farm fields.",
+                "hindi": "नहर की उप-शाखा में गाद और झाड़ियां जमा हैं, जिससे खेतों तक सिंचाई का पानी नहीं पहुंच पा रहा है।"
             },
             {
-                "tags": [
-                    "Housing",
-                    "Overcrowding"
-                ],
-                "english": "Overcrowding and shortage of affordable housing.",
-                "hindi": "अत्यधिक भीड़भाड़ और किफायती आवासों की कमी।"
+                "tags": ["Agriculture", "Government Schemes", "Subsidy"],
+                "english": "Application for subsidized solar water pump scheme pending at Block Development Office for 8 months.",
+                "hindi": "सब्सिडी वाले सोलर पंप योजना का आवेदन पिछले 8 महीने से ब्लॉक कार्यालय में अटका हुआ है।"
+            }
+        ]
+    },
+    {
+        "name": "Geeta Verma (गीता वर्मा)",
+        "mobileNo": 9823412006,
+        "wardNo": "2",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Education", "School", "Infrastructure"],
+                "english": "Government Primary School roof is leaking during rains, dangerous condition for small children.",
+                "hindi": "राजकीय प्राथमिक विद्यालय की छत से बारिश में पानी टपकता है, जिससे बच्चों के लिए खतरा बना रहता है।"
+            },
+            {
+                "tags": ["Water", "Education", "Sanitation"],
+                "english": "No functional drinking water tap or clean toilet facility inside the school campus.",
+                "hindi": "स्कूल परिसर में पीने के स्वच्छ पानी और साफ शौचालय की कोई सुविधा नहीं है।"
+            }
+        ]
+    },
+    {
+        "name": "Dinesh Yadav (दिनेश यादव)",
+        "mobileNo": 9823412007,
+        "wardNo": "5",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Roads", "Potholes", "Infrastructure"],
+                "english": "Main approach road from village to district highway is full of deep potholes, causing frequent bike accidents.",
+                "hindi": "गांव से मुख्य सड़क को जोड़ने वाला संपर्क मार्ग गड्ढों से भरा है, जिससे आए दिन दुर्घटनाएं होती हैं।"
+            }
+        ]
+    },
+    {
+        "name": "Manju Devi (मंजू देवी)",
+        "mobileNo": 9823412008,
+        "wardNo": "3",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Ration", "PDS", "Food Security"],
+                "english": "Fair Price Ration shop dealer charges extra money and provides 2 kg less wheat per ration card.",
+                "hindi": "राशन डीलर हर राशन कार्ड पर निर्धारित मात्रा से 2 किलो कम गेहूं देता है और अतिरिक्त पैसे वसूलता है।"
+            },
+            {
+                "tags": ["Pension", "Government Schemes"],
+                "english": "Old Age Pension payments have not been credited into bank accounts for the last 4 months.",
+                "hindi": "बुजुर्गों की वृद्धावस्था पेंशन पिछले 4 महीनों से बैंक खाते में नहीं आई है।"
+            }
+        ]
+    },
+    {
+        "name": "Suresh Chandra (सुरेश चंद्र)",
+        "mobileNo": 9823412009,
+        "wardNo": "1",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Roads", "Drainage", "Sanitation"],
+                "english": "Water logging on the central village passage during rains stops children and elderlies from walking.",
+                "hindi": "बारिश के बाद मुख्य रास्ते पर जलभराव हो जाता है, जिससे बच्चों और बुजुर्गों का निकलना दूभर हो जाता है।"
+            }
+        ]
+    },
+    {
+        "name": "Asha Rani (आशा रानी)",
+        "mobileNo": 9823412010,
+        "wardNo": "4",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Sanitation", "Cleanliness", "Women Safety"],
+                "english": "Community toilet complex has no water supply or electricity, locks remain broken.",
+                "hindi": "सामुदायिक शौचालय में पानी और बिजली की कोई व्यवस्था नहीं है, दरवाजे भी टूटे हुए हैं।"
+            },
+            {
+                "tags": ["Health", "Child Care", "Anganwadi"],
+                "english": "Anganwadi center building requires immediate whitewash, pest control, and nutritional meal support.",
+                "hindi": "आंगनवाड़ी केंद्र के भवन की मरम्मत, पुताई और बच्चों के पौष्टिक आहार की नियमित आपूर्ति की आवश्यकता है।"
+            }
+        ]
+    },
+    {
+        "name": "Harish Meena (हरीश मीणा)",
+        "mobileNo": 9823412011,
+        "wardNo": "2",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Electricity", "Safety", "Infrastructure"],
+                "english": "Old electric pole is leaning dangerously over residential house with loose hanging live wires.",
+                "hindi": "बिजली का पुराना खंभा मकान की तरफ खतरनाक तरीके से झुक गया है और नंगे तार लटक रहे हैं।"
+            }
+        ]
+    },
+    {
+        "name": "Premwati Sharma (प्रेमवती शर्मा)",
+        "mobileNo": 9823412012,
+        "wardNo": "5",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Water", "Health", "Drinking Water"],
+                "english": "Village tubewell water is contaminated with yellow silt and high fluoride, causing joint pains.",
+                "hindi": "नलकूप से पीला और फ्लोराइड युक्त पानी आ रहा है, जिससे ग्रामीणों को जोड़ों में दर्द और पेट की बीमारियां हो रही हैं।"
+            }
+        ]
+    },
+    {
+        "name": "Vijay Kumar (विजय कुमार)",
+        "mobileNo": 9823412013,
+        "wardNo": "3",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Agriculture", "Cattle", "Crop Damage"],
+                "english": "Stray cattle destroying standing mustard and gram crops at night; village needs an active Gaushala shelter.",
+                "hindi": "आवारा मवेशी रात में सरसों और चने की फसल को बर्बाद कर रहे हैं, गांव में गौशाला की तुरंत व्यवस्था की जाए।"
+            },
+            {
+                "tags": ["Agriculture", "Insurance", "Compensation"],
+                "english": "Kisan Fasal Bima crop damage survey was not conducted for the hail storm losses.",
+                "hindi": "ओलावृष्टि से हुए फसल नुकसान का प्रधानमंत्री फसल बीमा योजना के तहत अब तक सर्वे नहीं किया गया।"
+            }
+        ]
+    },
+    {
+        "name": "Radha Kishan (राधा किशन)",
+        "mobileNo": 9823412014,
+        "wardNo": "1",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Roads", "Infrastructure", "Agriculture"],
+                "english": "Unpaved farm track (Kachha Rasta) gets flooded, preventing tractors from transporting harvest to mandi.",
+                "hindi": "खेतों तक जाने वाला कच्चा रास्ता कीचड़ में बदल गया है, जिससे फसल मंडी ले जाने में भारी दिक्कत हो रही है।"
+            }
+        ]
+    },
+    {
+        "name": "Meena Kumari (मीना कुमारी)",
+        "mobileNo": 9823412015,
+        "wardNo": "4",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Health", "Immunization", "Government Services"],
+                "english": "ANM health worker is absent during monthly infant immunization days in the sub-center.",
+                "hindi": "उप-स्वास्थ्य केंद्र में बच्चों के टीकाकरण के दिन एएनएम स्वास्थ्य कार्यकर्ता उपस्थित नहीं रहती हैं।"
+            }
+        ]
+    },
+    {
+        "name": "Bhagwan Das (भगवान दास)",
+        "mobileNo": 9823412016,
+        "wardNo": "2",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Water", "Electricity", "Tubewell"],
+                "english": "Government tubewell motor burnt due to high electrical surge; drinking water supply halted.",
+                "hindi": "हाई वोल्टेज करंट से सरकारी नलकूप की मोटर जल गई है, जिससे पूरे मोहल्ले में पानी की सप्लाई बंद है।"
+            },
+            {
+                "tags": ["Cleanliness", "Environment"],
+                "english": "Plastics and construction debris dumped openly in the public pond area.",
+                "hindi": "गांव के पुराने तालाब में प्लास्टिक कचरा और मलबा फेंका जा रहा है, जिससे तालाब दूषित हो रहा है।"
+            }
+        ]
+    },
+    {
+        "name": "Shanti Devi (शांति देवी)",
+        "mobileNo": 9823412017,
+        "wardNo": "5",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Pension", "Government Schemes", "Social Welfare"],
+                "english": "Widow pension application submitted 6 months ago has not received verification approval yet.",
+                "hindi": "6 महीने पहले जमा किए गए विधवा पेंशन के आवेदन का अब तक सत्यापन और अनुमोदन नहीं हुआ है।"
+            }
+        ]
+    },
+    {
+        "name": "Anil Kumar (अनिल कुमार)",
+        "mobileNo": 9823412018,
+        "wardNo": "3",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Electricity", "Street Lights", "Infrastructure"],
+                "english": "Pathway leading to cremation ground (Muktidham) has zero lights, unsafe at night.",
+                "hindi": "मुक्तिधाम (श्मशान घाट) के रास्ते पर कोई लाइट नहीं है, रात के समय भारी असुविधा होती है।"
+            }
+        ]
+    },
+    {
+        "name": "Kavita Joshi (कविता जोशी)",
+        "mobileNo": 9823412019,
+        "wardNo": "4",
+        "numberOfProblems": 1,
+        "problems": [
+            {
+                "tags": ["Education", "School", "Safety"],
+                "english": "Village school boundary wall has collapsed, stray animals enter during school hours.",
+                "hindi": "सरकारी स्कूल की चारदीवारी ढह गई है, जिससे स्कूल के समय आवारा जानवर अंदर आ जाते हैं।"
+            }
+        ]
+    },
+    {
+        "name": "Santosh Gurjar (संतोष गुर्जर)",
+        "mobileNo": 9823412020,
+        "wardNo": "5",
+        "numberOfProblems": 2,
+        "problems": [
+            {
+                "tags": ["Agriculture", "Fertilizer", "Farming"],
+                "english": "Primary agricultural cooperative society store is out of stock of DAP and Urea fertilizers during sowing peak.",
+                "hindi": "बुवाई के मुख्य समय में ग्राम सेवा सहकारी समिति पर डीएपी और यूरिया खाद उपलब्ध नहीं है।"
+            },
+            {
+                "tags": ["Water", "Agriculture", "Tubewell"],
+                "english": "Need sanction for new community tube-well in agricultural patch of Ward 5.",
+                "hindi": "वार्ड नंबर 5 के कृषि क्षेत्र में नए सामुदायिक नलकूप की स्वीकृति की आवश्यकता है।"
             }
         ]
     }

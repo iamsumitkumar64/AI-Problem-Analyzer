@@ -4,7 +4,6 @@ import path from "path";
 import util from "util";
 import { __dirname } from "../index.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { delfile } from "./delete_file.js";
 import { getIo } from './socket.js';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
@@ -45,21 +44,24 @@ export const pdfConvertFunc = async (pdf_path, img_folder, image_name) => {
         const reports = [];
         for (const imgPath of image_arr) {
             const base64 = toBase64(imgPath);
-            await delfile(imgPath);
             const report = await analyzeHandwrittenImage(base64);
-            reports.push(report);
-        }
-
-        if (fs.existsSync(img_path)) {
-            fs.rmSync(img_path, { recursive: true, force: true });
+            if (report) {
+                reports.push(report);
+            }
         }
 
         getIo().emit('report', 'success');
         return reports;
     } catch (error) {
         getIo().emit('report', 'Failed');
-        console.error("pdfConvertFunc Function error:", error);
+        console.error("pdfConvertFunc error:", error);
         throw error;
+    } finally {
+        if (fs.existsSync(img_path)) {
+            try {
+                fs.rmSync(img_path, { recursive: true, force: true });
+            } catch (err) {}
+        }
     }
 };
 
@@ -71,66 +73,39 @@ const toBase64 = (filePath) => {
 
 // Send image to Gemini Vision for JSON report
 export const analyzeHandwrittenImage = async (base64Image) => {
-    let result = null;
-    let lastError = null;
-
-    const candidateModels = [
-        process.env.GEMINI_MODEL,
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-flash"
-    ].filter(Boolean);
-    const uniqueModels = [...new Set(candidateModels)];
-
-    for (const modelName of uniqueModels) {
-        try {
-            const model = genAI.getGenerativeModel({
-                model: modelName
-            });
-            result = await model.generateContent({
-                contents: [
+    const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const model = genAI.getGenerativeModel({ model: modelName });
+    const result = await model.generateContent({
+        contents: [
+            {
+                parts: [
                     {
-                        parts: [
-                            {
-                                text: `Assume you are a report generator Extract Json like this
-                        {
-                            "name": "(Person name in english)(Person name in hindi)",
-                            "mobileNo": 987,
-                            "wardNo": 1,
-                            "numberOfProblems": 5,
-                            "problems": [
-                                {
-                                    "tags": ["Problem related tags"],
-                                    "english": "problem in english",
-                                    "hindi": "problem in hindi language"
-                                }
-                            ]
-                        }
-                        Return json only 
-                        if english or hindi not present convert both and give me both filled
-                        Make everything in this format and if tags are not found make them in others category
-                                `,
-                            },
-                            {
-                                inlineData: {
-                                    mimeType: "image/jpeg",
-                                    data: base64Image,
-                                },
-                            },
-                        ],
+                        text: `Assume you are a report generator. Extract JSON like this:
+{
+    "name": "(Person name in english)(Person name in hindi)",
+    "mobileNo": 987,
+    "wardNo": 1,
+    "numberOfProblems": 5,
+    "problems": [
+        {
+            "tags": ["Problem related tags"],
+            "english": "problem in english",
+            "hindi": "problem in hindi language"
+        }
+    ]
+}
+Return JSON only. If english or hindi not present, convert and fill both. If tags are not found, make them in others category.`,
+                    },
+                    {
+                        inlineData: {
+                            mimeType: "image/png",
+                            data: base64Image,
+                        },
                     },
                 ],
-            });
-            if (result) break;
-        } catch (err) {
-            lastError = err;
-            console.warn(`Gemini model '${modelName}' failed, trying next candidate:`, err.message);
-        }
-    }
-
-    if (!result) {
-        throw lastError || new Error("Failed to generate content with any Gemini model.");
-    }
+            },
+        ],
+    });
 
     const response = result?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
     try {

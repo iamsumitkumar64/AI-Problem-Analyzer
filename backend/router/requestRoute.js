@@ -2,7 +2,9 @@ import { Router } from 'express';
 
 import {
     getAllRequest,
+    getRequestById,
     uploadRequest,
+    updateRequest,
     deleteRequest,
     previewfile,
     generateReport
@@ -11,9 +13,12 @@ import {
 const requestRouter = Router();
 
 requestRouter.get('/', getAllRequest);
-requestRouter.get('/preview/:req_id', previewfile);
-requestRouter.get('/report/:req_id', generateReport);
+requestRouter.get('/:req_id', getRequestById);
 requestRouter.post('/', uploadRequest);
+requestRouter.put('/:req_id', updateRequest);
+requestRouter.patch('/:req_id', updateRequest);
 requestRouter.delete('/:req_id', deleteRequest);
+requestRouter.get('/:req_id/preview', previewfile);
+requestRouter.get('/:req_id/report', generateReport);
 
 export default requestRouter;

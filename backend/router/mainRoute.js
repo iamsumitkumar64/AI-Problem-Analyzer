@@ -1,5 +1,4 @@
 import { Router } from "express";
-import isSessionAuth from "../middlewares/session.js";
 
 import {
     homePage,
@@ -11,7 +10,7 @@ import {
 
 const mainRouter = Router();
 
-mainRouter.get('/', homePage);
+mainRouter.get('/session', homePage);
 mainRouter.post('/login', loginUser);
 mainRouter.post('/register', registerUser);
 mainRouter.post('/logout', logoutUser);
